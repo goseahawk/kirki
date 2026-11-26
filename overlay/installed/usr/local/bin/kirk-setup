@@ -63,6 +63,10 @@ done
 unset DISPLAY WAYLAND_DISPLAY
 export QT_QPA_PLATFORM=xcb QT_STYLE_OVERRIDE=Fusion QT_QPA_PLATFORMTHEME=
 
+# Calamares started with -c DIR also wants its QML in DIR/qml, or it stops at once ("application
+# data directory is missing qml/"). Link Calamares's own, as Asahi ALARM's setup config does.
+[[ -e /usr/share/calamares-kirkus/qml ]] || ln -s /usr/share/calamares/qml /usr/share/calamares-kirkus/qml
+
 # Calamares can't be cancelled, but it can crash or be closed by force. Show it again, at most
 # three times; if setup still isn't done, it's shown again at the next start.
 for attempt in 1 2 3; do
