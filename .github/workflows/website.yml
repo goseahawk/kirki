@@ -1,5 +1,9 @@
-# Publishes the download website (the site/ folder) to GitHub Pages whenever it changes on main.
+# Publishes the website (the site/ folder) to GitHub Pages whenever it changes on main.
 # One-time setup: repository Settings → Pages → Source: "GitHub Actions".
+#
+# Two jobs, as in GitHub's own Pages template: the deploy job only starts once the upload job has
+# finished, so the uploaded site is always findable. (In one job, deploy-pages sometimes looked for it
+# a moment too early and failed with "No artifacts named github-pages were found".)
 name: Website
 
 on:
@@ -18,16 +22,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  publish:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
       - id: deploy
         uses: actions/deploy-pages@v4
