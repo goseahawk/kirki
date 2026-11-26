@@ -15,6 +15,8 @@ packaged for Arch by [Asahi ALARM](https://asahi-alarm.org/).
 It's still Arch underneath (Arch Linux ARM, to be exact), so nothing is hidden or locked down: pacman
 and the [Arch wiki](https://wiki.archlinux.org/) work as usual whenever you want to go further.
 
+Website: **[goseahawk.github.io/kirki](https://goseahawk.github.io/kirki/)**
+
 kirkus is an independent project. It is not affiliated with or endorsed by Arch Linux, Arch Linux
 ARM, Asahi Linux, Asahi ALARM or Apple.
 

@@ -23,6 +23,7 @@ installer.
 | `apply-to-installed.sh` | updates an existing install to the current project |
 | `overlay/installed/` | files in every installed system, including the first-start setup |
 | `branding/` | the logo files and the tools that make every screen image from them |
+| `site/` | the website, published to GitHub Pages by `.github/workflows/website.yml` |
 | `.github/workflows/build-image.yml` | builds the image on GitHub's ARM servers and publishes a release |
 
 ## How a Mac starts kirkus
@@ -184,6 +185,18 @@ for PCs. Tag releases with the bare version. A release must contain every file i
 
 Published releases reach every installed system after its next `pacman -Syu`, and new installs at
 once (the install command follows "latest"). Test with a draft first.
+
+## The website
+
+`site/` is the website, at https://goseahawk.github.io/kirki/, made from kirkus's: plain HTML and
+CSS, with DM Sans bundled (SIL Open Font License, `site/fonts/OFL.txt`) so nothing loads from other
+sites. Instead of a download button it shows the install command with a Copy button. The command
+never changes, since it always follows the latest release. `release.js` asks GitHub's API for the
+latest release and shows its version, download size and date under it; if that fails, the plain
+description stays. So publishing a release updates the website by itself.
+
+Any change to `site/` on main is published by the **Website** workflow. One-time setup: Settings →
+Pages → Source: **GitHub Actions**.
 
 ## Not yet confirmed on real hardware
 

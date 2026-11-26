@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>kirkus for Apple Silicon: Arch Linux on your M1 or M2 Mac</title>
+  <meta name="description" content="kirkus for Apple Silicon is a simple, easy-to-use Arch Linux with KDE Plasma for M1 and M2 Macs. Installed next to macOS with one command, with Mac support from Asahi Linux.">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="release.js" defer></script>
+</head>
+<body>
+  <div class="hero">
+  <header class="top wrap">
+    <a class="brand" href="./" aria-label="kirkus home">
+      <img class="logo" src="logo.svg" alt="kirkus" width="96" height="35">
+    </a>
+    <nav>
+      <a href="#install">Install</a>
+      <a href="https://github.com/goseahawk/kirki#readme">Guide</a>
+      <a href="https://github.com/goseahawk/kirki">GitHub</a>
+    </nav>
+  </header>
+
+    <section aria-label="Install">
+      <div class="wrap hero-inner">
+        <img class="hero-mark" src="mark.svg" alt="" width="104" height="131">
+        <p class="eyebrow">For Apple Silicon Macs</p>
+        <h1>Arch Linux on your Mac,<br>made simple.</h1>
+        <p class="lead">kirkus gives your M1 or M2 Mac a complete, good-looking KDE Plasma desktop that
+          sets itself up and keeps itself up to date, right next to macOS.</p>
+
+        <div class="get">
+          <p class="cmd-label">Paste this into <b>Terminal</b> in macOS:</p>
+          <div class="cmd">
+            <code id="command">curl -fsSL https://github.com/goseahawk/kirki/releases/latest/download/install.sh | sh</code>
+            <button class="button copy" id="copy" type="button" aria-label="Copy the install command">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8.5" y="8.5" width="11" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 5.5V5a1.5 1.5 0 0 0-1.5-1.5H6A2.5 2.5 0 0 0 3.5 6v8A1.5 1.5 0 0 0 5 15.5h.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+              <span id="copy-label">Copy</span>
+            </button>
+          </div>
+          <p class="meta" id="release-meta">For Macs with M1 or M2 · needs macOS 13.5 or later</p>
+          <p class="links">
+            <a href="https://github.com/goseahawk/kirki#readme">Read the guide first</a>
+            <span aria-hidden="true">·</span>
+            <a href="https://github.com/goseahawk/kirki/releases">All releases</a>
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <main>
+    <section class="features wrap" aria-label="What you get">
+      <article>
+        <h2>One command to install</h2>
+        <p>Run it in macOS's Terminal. kirkus makes room next to macOS, and you choose which one to
+          start.</p>
+      </article>
+      <article>
+        <h2>Your Mac just works</h2>
+        <p>Wi-Fi, graphics, sound, the keyboard and battery are supported by
+          <a href="https://asahilinux.org/">Asahi Linux</a>, set up for you.</p>
+      </article>
+      <article>
+        <h2>Mistakes can be undone</h2>
+        <p>Snapshots are taken before risky updates, and you can start your Mac from one right from the
+          boot menu.</p>
+      </article>
+      <article>
+        <h2>Updates take care of themselves</h2>
+        <p>Once a week kirkus updates the system, your apps and itself, when you're plugged in and it
+          won't get in your way.</p>
+      </article>
+    </section>
+
+    <section class="install" id="install">
+      <div class="wrap">
+        <h2 class="section-title">Install in three steps</h2>
+        <ol class="steps">
+          <li>
+            <h3>Run the command</h3>
+            <p>Back up your Mac with Time Machine, then paste the command above into Terminal. It
+              downloads kirkus (about 2 GB) and starts the Asahi installer.</p>
+          </li>
+          <li>
+            <h3>Choose kirkus and its space</h3>
+            <p>Pick <b>kirkus</b> and how much space to give it. macOS shrinks to make room; it and
+              your files stay.</p>
+          </li>
+          <li>
+            <h3>Finish at startup</h3>
+            <p>Shut down, then hold the <kbd>power button</kbd> and choose <b>kirkus</b>. Follow the
+              steps on screen, then set up your account.</p>
+          </li>
+        </ol>
+        <p class="more">The installer's instructions matter. <a href="https://github.com/goseahawk/kirki#readme">Read the full guide</a> before you start.</p>
+      </div>
+    </section>
+
+    <section class="needs wrap" aria-labelledby="needs-title">
+      <h2 class="section-title" id="needs-title">What you need</h2>
+      <ul>
+        <li><b>A Mac with M1 or M2.</b> M3 and later can't run Linux yet. For PCs and Intel Macs, get
+          <a href="https://goseahawk.github.io/kirkus/">kirkus</a>.</li>
+        <li><b>macOS 13.5 or later</b>, fully updated, and your Mac's password.</li>
+        <li><b>25 GB of free space</b> in macOS: 20 GB or more for kirkus, plus room for the download.</li>
+        <li><b>An internet connection</b> while installing.</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <p>kirkus is an independent project based on <a href="https://archlinuxarm.org/">Arch Linux ARM</a>,
+      with Mac support from <a href="https://asahilinux.org/">Asahi Linux</a> and
+      <a href="https://asahi-alarm.org/">Asahi ALARM</a>. It is not affiliated with or endorsed by any
+      of them, or by Apple.</p>
+    <p><a href="https://github.com/goseahawk/kirki">Source code on GitHub</a> · MIT License (the kirkus
+      logo excepted)</p>
+  </footer>
+</body>
+</html>
