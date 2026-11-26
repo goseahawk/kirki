@@ -1,0 +1,34 @@
+# The kirkus Global Theme (dark): what "Apply" in System Settings → Global Theme sets, and what a
+# new account starts with: the kirkus colours, icons, Plasma Style, wallpaper and splash. Window
+# borders are KDE's Breeze, in the kirkus colours. The light twin is org.kirkus.light.
+
+[kdeglobals][KDE]
+widgetStyle=Breeze
+
+[kdeglobals][General]
+ColorScheme=KirkusDark
+
+[kdeglobals][Icons]
+Theme=kirkus
+
+[plasmarc][Theme]
+name=kirkus
+
+[Wallpaper]
+Image=kirkus
+
+[kcminputrc][Mouse]
+cursorTheme=breeze_cursors
+
+[kwinrc][org.kde.kdecoration2]
+library=org.kde.breeze
+theme=Breeze
+
+[kwinrc][WindowSwitcher]
+LayoutName=org.kde.breeze.desktop
+
+[kwinrc][DesktopSwitcher]
+LayoutName=org.kde.breeze.desktop
+
+[ksplashrc][KSplash]
+Theme=org.kirkus.splash

@@ -1,0 +1,37 @@
+#!/bin/sh
+# kirk-detect -- works out which hardware this is (kirkus for Apple Silicon).
+#
+#   eval "$(kirk-detect)"     sets the variables below in the calling shell
+#   kirk-detect --summary     prints a one-line human description
+#
+# KIRK_APPLE_SILICON  yes if the device tree says this is an Apple Silicon Mac (M1 or later)
+# KIRK_MODEL          the model name from the device tree, e.g. "Apple MacBook Air (M1, 2020)"
+# KIRK_CHIP           the SoC from the device tree, e.g. t8103 (M1), t8112 (M2), t6000 (M1 Pro)
+# KIRK_LAPTOP         yes if it has a battery (MacBook), no for a Mac mini, iMac, Studio or Pro
+#
+# KIRK_DT, KIRK_SYS point it at fake files, for testing.
+DT=${KIRK_DT:-/proc/device-tree}
+S=${KIRK_SYS:-/sys}
+
+clean() { tr -d '\000' | tr -cd 'A-Za-z0-9 ,._()+-' | sed 's/^ *//; s/ *$//'; }
+model=$(cat "$DT/model" 2>/dev/null | clean)
+# "compatible" is a list of NUL-separated strings, e.g. apple,j313 apple,t8103 apple,arm-platform
+compat=$(tr '\000' ' ' 2>/dev/null < "$DT/compatible")
+case " $compat " in *" apple,arm-platform "*) as=yes ;; *) as=no ;; esac
+chip=$(printf '%s\n' $compat | sed -n 's/^apple,\(t[0-9][0-9]*\)$/\1/p' | head -1)
+
+laptop=no
+for p in "$S"/class/power_supply/*; do
+  [ "$(cat "$p/type" 2>/dev/null)" = Battery ] || continue
+  [ "$(cat "$p/scope" 2>/dev/null)" = Device ] && continue   # a mouse or keyboard battery
+  laptop=yes
+done
+
+if [ "${1:-}" = --summary ]; then
+  printf '%s' "${model:-Unknown model}"
+  [ -n "$chip" ] && printf ' (%s)' "$chip"
+  [ "$as" = yes ] && printf '%s' "; Apple Silicon: yes" || printf '%s' "; Apple Silicon: NOT DETECTED"
+  printf '; laptop: %s\n' "$laptop"
+  exit 0
+fi
+printf "KIRK_APPLE_SILICON=%s\nKIRK_MODEL='%s'\nKIRK_CHIP=%s\nKIRK_LAPTOP=%s\n" "$as" "$model" "$chip" "$laptop"

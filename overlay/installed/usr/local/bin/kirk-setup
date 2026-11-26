@@ -1,0 +1,75 @@
+#!/bin/bash
+# kirkus first-start setup: shows the setup window (Calamares, full screen in the cage kiosk
+# compositor) until it has been completed, then exits so the login screen can start.
+# Run once by kirk-setup.service, on the first start after installing. Based on Asahi ALARM's
+# first-time-setup-cage.sh (asahi-calamares-configs, MIT licence).
+# Logs: journalctl -u kirk-setup
+DONE=/var/lib/kirkus/setup-done
+trap 'killall -9 cage calamares 2>/dev/null || true' EXIT INT TERM
+
+udevadm settle
+# wait (up to 5 s) for the GPU, so cage doesn't fall back to the boot framebuffer
+for _ in $(seq 50); do
+  compgen -G '/dev/dri/by-path/platform-*gpu-card' >/dev/null && break
+  sleep 0.1
+done
+
+# ---- pre-select the keyboard layout from the Mac's own keyboard ----
+# The physical layout (ANSI / ISO / JIS) comes from the keyboard's HID country code, the language
+# from the device tree m1n1 passes on (asahi,kblang-code, macOS's keyboard type).
+xkbmodel=""; xkblayout=""; xkbvariant=""
+country=00
+for f in $(find /sys/devices/platform -name country -path '*05AC:*' 2>/dev/null); do
+  cc=$(cat "$f" 2>/dev/null); [[ -n $cc && $cc != 00 ]] && country=$cc
+done
+case $country in
+  0d) xkbmodel=applealu_iso ;;
+  0f) xkbmodel=applealu_jis ;;
+  21) xkbmodel=applealu_ansi ;;
+esac
+kblang=unknown
+[[ -e /proc/device-tree/chosen/asahi,kblang-code ]] && kblang=$(od -An -tx1 /proc/device-tree/chosen/asahi,kblang-code | tr -d ' \n')
+case $kblang in
+  00000001) xkblayout=de ;;     00000002) xkblayout=fr ;;     00000003) xkblayout=jp ;;
+  00000004) xkblayout=us; xkbvariant=intl ;;                    00000005) xkblayout=us ;;
+  00000006) xkblayout=gb ;;     00000007) xkblayout=es ;;     00000008) xkblayout=se ;;
+  00000009) xkblayout=it ;;     0000000a) xkblayout=ca; xkbvariant=multi ;;
+  0000000b) xkblayout=cn ;;     0000000c) xkblayout=dk ;;     0000000d) xkblayout=be ;;
+  0000000e) xkblayout=no ;;     0000000f) xkblayout=kr106 ;;  00000010) xkblayout=nl ;;
+  00000011) xkblayout=ch ;;     00000012) xkblayout=tw ;;     00000013) xkblayout=ara ;;
+  00000014) xkblayout=bg ;;     00000015) xkblayout=hr ;;     00000016) xkblayout=cz ;;
+  00000017) xkblayout=gr ;;     00000018) xkblayout=il ;;     00000019) xkblayout=is ;;
+  0000001a) xkblayout=hu ;;     0000001b) xkblayout=pl ;;     0000001c) xkblayout=pt ;;
+  0000001d) xkblayout=ir ;;     0000001e) xkblayout=ro ;;     0000001f) xkblayout=ru; xkbvariant=mac ;;
+  00000020) xkblayout=sk ;;     00000021) xkblayout=th ;;     00000022|00000023|00000025) xkblayout=tr ;;
+  00000024) xkblayout=ua; xkbvariant=macOS ;;                   00000026) xkblayout=latam ;;
+esac
+if [[ -n $xkblayout && -n $xkbmodel ]]; then
+  echo "Mac keyboard: $xkblayout ${xkbvariant:-(no variant)}, $xkbmodel"
+  localectl set-x11-keymap "$xkblayout" "$xkbmodel" "$xkbvariant" || true
+fi
+
+# ---- the setup window ----
+export HOME=/run/user/0/kirk-setup-home
+rm -rf "$HOME"; mkdir -p "$HOME"; cd "$HOME" || exit 1
+export XDG_RUNTIME_DIR=$HOME/.runtime
+mkdir -p "$XDG_RUNTIME_DIR"; chmod 0700 "$XDG_RUNTIME_DIR"
+# Retina screens: make it readable
+for m in /sys/class/drm/card*-eDP-1/modes; do
+  [[ -r $m ]] || continue
+  width=$(sort -n "$m" | tail -1 | cut -dx -f1)
+  if [[ $width -gt 2048 ]]; then export WLR_OUTPUT_SCALE=1.5 QT_SCALE_FACTOR=1.5; fi
+done
+unset DISPLAY WAYLAND_DISPLAY
+export QT_QPA_PLATFORM=xcb QT_STYLE_OVERRIDE=Fusion QT_QPA_PLATFORMTHEME=
+
+# Calamares can't be cancelled, but it can crash or be closed by force. Show it again, at most
+# three times; if setup still isn't done, it's shown again at the next start.
+for attempt in 1 2 3; do
+  cage -s -- calamares -D6 -c /usr/share/calamares-kirkus
+  [[ -e $DONE ]] && { echo "Setup complete."; exit 0; }
+  echo "Setup window closed before setup was finished (attempt $attempt)."
+  sleep 2
+done
+echo "Setup was not completed; it starts again at the next start."
+exit 1

@@ -1,0 +1,36 @@
+# kirkus look for the first-start setup. Palette: Ink #16171b, Bone #f3efe6, Marigold #f2a93b.
+---
+componentName:  kirkus
+welcomeStyleCalamares:   false
+welcomeExpandingLogo:    true
+windowExpanding:    fullscreen
+windowSize: 50em, 30em
+windowPlacement: center
+sidebar: widget
+navigation: widget
+
+strings:
+    productName:         kirkus
+    shortProductName:    kirkus
+    versionedName:       kirkus
+    shortVersionedName:  kirkus
+    bootloaderEntryName: kirkus
+    productUrl:          https://github.com/goseahawk/kirki
+    supportUrl:          https://github.com/goseahawk/kirki/issues
+
+images:
+    productIcon:         "icon.png"
+    productLogo:         "icon.png"
+    productWelcome:      "welcome.png"
+
+style:
+    SidebarBackground:        "#16171b"
+    SidebarText:              "#f3efe6"
+    SidebarTextCurrent:       "#16171b"
+    SidebarBackgroundCurrent: "#f2a93b"
+
+slideshow: ["welcome.png"]
+slideshowAPI: 2
+
+uploadServer :
+    type :    "none"

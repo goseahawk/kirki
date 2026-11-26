@@ -1,0 +1,19 @@
+[Trigger]
+Operation = Upgrade
+Type = Package
+Target = linux-asahi
+Target = m1n1
+Target = uboot-asahi
+Target = asahi-scripts
+Target = asahi-fwextract
+Target = mkinitcpio
+Target = systemd
+Target = grub
+Target = mesa
+Target = plasma-desktop
+
+[Action]
+Description = Timeshift snapshot before system-critical upgrade...
+When = PreTransaction
+Exec = /usr/local/bin/kirk-pre-snapshot
+AbortOnFail = false

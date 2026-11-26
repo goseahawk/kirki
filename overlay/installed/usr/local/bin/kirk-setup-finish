@@ -1,0 +1,33 @@
+#!/bin/bash
+# The kirkus part of first-start setup, run by Calamares once it has created the account
+# (usr/share/calamares-kirkus/modules/shellprocess-finish.conf):  kirk-setup-finish USERNAME
+# Records the install date, marks setup as done so it never shows again, and lets the login screen
+# start. Everything else (packages, branding, services) was set up when the image was built.
+set -u
+user=${1:-}
+DONE=/var/lib/kirkus/setup-done
+
+if [[ -n $user ]] && id "$user" >/dev/null 2>&1; then
+  # the account can use sudo (Calamares writes the sudoers rule; make sure of the group)
+  usermod -aG wheel "$user" || true
+else
+  echo "kirk-setup-finish: no account '$user' found."
+  exit 1
+fi
+
+touch /etc/kirk-release
+set_release_key() {
+  if grep -q "^$1=" /etc/kirk-release; then sed -i "s|^$1=.*|$1=$2|" /etc/kirk-release
+  else echo "$1=$2" >> /etc/kirk-release; fi
+}
+set_release_key INSTALL_DATE "$(date -I)"
+/usr/local/bin/kirk-branding
+
+# root stays locked: the account above has sudo
+passwd -l root >/dev/null 2>&1 || true
+
+mkdir -p "${DONE%/*}"
+touch "$DONE"
+systemctl disable kirk-setup.service >/dev/null 2>&1 || true
+echo "kirkus setup finished for $user."
+exit 0

@@ -1,0 +1,16 @@
+#!/bin/sh
+# KInfoCenter extra info: computer model. MUST print exactly two lines.
+# Apple Silicon Macs have no DMI tables; the model and chip come from the device tree,
+# e.g. "Apple MacBook Air (M1, 2020)" and compatible "apple,t8103".
+DT=${KIRK_DT:-/proc/device-tree}
+v=$(tr -d '\000\r\n' 2>/dev/null < "$DT/model" | sed 's/^ *//; s/ *$//')
+chip=$(tr '\000' '\n' 2>/dev/null < "$DT/compatible" | sed -n 's/^apple,\(t[0-9][0-9]*\)$/\1/p' | head -1)
+case "$chip" in
+  t8103) c="M1" ;;        t6000) c="M1 Pro" ;;   t6001) c="M1 Max" ;;   t6002) c="M1 Ultra" ;;
+  t8112) c="M2" ;;        t6020) c="M2 Pro" ;;   t6021) c="M2 Max" ;;   t6022) c="M2 Ultra" ;;
+  *)     c="" ;;
+esac
+[ -n "$v" ] || v="Unknown"
+# The model name usually already says the chip ("MacBook Air (M1, 2020)"); add it only if not.
+if [ -n "$c" ]; then case "$v" in *"$c"*) ;; *) v="$v, Apple $c" ;; esac; fi
+printf 'Model:\n%s\n' "$(printf '%s' "$v" | tr -d '\r\n')"

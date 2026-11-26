@@ -1,0 +1,8 @@
+#!/bin/sh
+# Makes the kirkus typeface, DM Sans, available system-wide (so the login screen, which runs as its
+# own user, can use it). The fonts ship with kirkus in /usr/share/fonts/kirkus; this refreshes the
+# font cache so they're found straight away. DM Sans is under the SIL Open Font License
+# (/usr/share/licenses/kirkus-fonts). Safe to re-run; never fails the caller.
+fc-cache -f /usr/share/fonts/kirkus >/dev/null 2>&1
+echo "DM Sans is ready."
+exit 0

@@ -1,0 +1,35 @@
+# kirkus GRUB theme: the boot splash as the background, the menu underneath it.
+# Fonts: GRUB's built-in Unifont by default. kirk-grub-theme-font swaps in DM Sans (or Noto Sans)
+# if it can build one; if a font name here is ever wrong, GRUB just uses its default font.
+
+title-text: ""
+desktop-image: "background.png"
+desktop-color: "#16171b"
+terminal-font: "Unifont Regular 16"
+
++ boot_menu {
+  left = 35%
+  top = 61%
+  width = 30%
+  height = 26%
+  item_font = "Unifont Regular 16"
+  selected_item_font = "Unifont Regular 16"
+  item_color = "#8f8b83"
+  selected_item_color = "#f3efe6"
+  item_height = 30
+  item_padding = 10
+  item_spacing = 4
+  icon_width = 0
+  icon_height = 0
+  scrollbar = false
+}
+
++ label {
+  top = 93%
+  left = 0
+  width = 100%
+  align = "center"
+  font = "Unifont Regular 16"
+  color = "#77736b"
+  text = "Enter: boot     E: edit     C: command line"
+}

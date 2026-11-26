@@ -1,0 +1,67 @@
+#!/bin/bash
+# At your first Plasma login on a laptop: makes sure tap to click is on for the touchpad, then asks
+# whether to keep it. Asks once ("Decide later" asks again next login). Change it any time in
+# System Settings > Mouse & Touchpad > Touchpad.
+#     kirk-touchpad-setup --tap-on    just turn tap to click on for every touchpad (no questions)
+flag="$HOME/.config/kirk-touchpad-asked"
+TAP_ON_ONLY=no
+[[ ${1:-} == --tap-on ]] && TAP_ON_ONLY=yes
+[[ $TAP_ON_ONLY == no && -e $flag ]] && exit 0
+
+# laptops only (a MacBook): kirk-detect looks for a system battery
+laptop=$(/usr/local/bin/kirk-detect | sed -n 's/^KIRK_LAPTOP=//p')
+[[ $laptop == yes || $TAP_ON_ONLY == yes ]] || { mkdir -p "$HOME/.config"; touch "$flag"; exit 0; }
+
+kwin() {   # kwin OBJECT METHOD ARGS... on KWin's input device interface
+  gdbus call --session --dest org.kde.KWin --object-path "$1" --method "$2" "${@:3}" 2>/dev/null
+}
+get() { kwin "/org/kde/KWin/InputDevice/$1" org.freedesktop.DBus.Properties.Get org.kde.KWin.InputDevice "$2"; }
+
+# KWin's input devices (Wayland session); wait for it to be ready
+devs=""
+for _ in $(seq 20); do
+  devs=$(kwin /org/kde/KWin/InputDevice org.freedesktop.DBus.Properties.Get \
+           org.kde.KWin.InputDeviceManager devicesSysNames | grep -o 'event[0-9]*')
+  [[ -n $devs ]] && break
+  sleep 1
+done
+[[ -n $devs ]] || exit 0          # not a Wayland session; ask next time
+
+pads=()
+for d in $devs; do
+  [[ $(get "$d" touchpad) == *true* ]] && pads+=("$d")
+done
+if (( ${#pads[@]} == 0 )); then                 # no touchpad
+  [[ $TAP_ON_ONLY == yes ]] || { mkdir -p "$HOME/.config"; touch "$flag"; }
+  exit 0
+fi
+
+set_tap() {   # set_tap true|false, for every touchpad, now and saved for later logins
+  local d vendor product name
+  for d in "${pads[@]}"; do
+    kwin "/org/kde/KWin/InputDevice/$d" org.freedesktop.DBus.Properties.Set \
+      org.kde.KWin.InputDevice tapToClick "<$1>" >/dev/null
+    vendor=$(get "$d" vendor | grep -o '[0-9]\+' | tail -1)
+    product=$(get "$d" product | grep -o '[0-9]\+' | tail -1)
+    name=$(get "$d" name | sed -E "s/^\(<'(.*)'>,\)$/\1/")
+    [[ -n $vendor && -n $product && -n $name ]] &&
+      kwriteconfig6 --file kcminputrc --group Libinput --group "$vendor" --group "$product" \
+        --group "$name" --key TapToClick "$1"
+  done
+}
+
+set_tap true
+[[ $TAP_ON_ONLY == yes ]] && exit 0
+kdialog --title "Touchpad" --icon input-touchpad \
+  --yesnocancel "Tap to click is on: a light tap on the touchpad clicks, so you don't have to press it down.
+
+Do you want to keep it on?
+
+You can change this later in System Settings > Mouse & Touchpad > Touchpad." \
+  --yes-label "Keep it on" --no-label "Turn it off" --cancel-label "Decide later"
+case $? in
+  0) ;;                       # keep it on
+  1) set_tap false ;;
+  *) exit 0 ;;                # closed or "Decide later": ask again next login
+esac
+mkdir -p "$HOME/.config"; touch "$flag"

@@ -1,0 +1,6 @@
+# build output
+/build/
+/out/
+*.iso
+*.zip
+__pycache__/

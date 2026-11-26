@@ -1,0 +1,24 @@
+# kirkus first-start setup: account, language, time zone and keyboard, before the login screen.
+# Shown until it's completed (kirk-setup-finish leaves /var/lib/kirkus/setup-done), then never again.
+# Based on Asahi ALARM's calamares-cage.service.
+[Unit]
+Description=kirkus first-start setup
+ConditionPathExists=!/var/lib/kirkus/setup-done
+Before=display-manager.service sddm.service
+After=systemd-user-sessions.service getty@tty1.service systemd-logind.service plymouth-start.service
+
+[Service]
+Environment="XDG_SEAT=seat0"
+Environment="XDG_VTNR=1"
+Environment="XDG_SESSION_TYPE=wayland"
+Environment="XDG_SESSION_CLASS=greeter"
+Environment="XDG_SESSION_DESKTOP=none"
+Type=oneshot
+RemainAfterExit=yes
+TimeoutStartSec=infinity
+# the boot splash has to let go of the screen first
+ExecStartPre=-/usr/bin/plymouth quit
+ExecStart=/sbin/runuser -l root -c /usr/local/bin/kirk-setup
+
+[Install]
+WantedBy=multi-user.target
