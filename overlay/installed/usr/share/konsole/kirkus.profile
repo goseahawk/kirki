@@ -2,5 +2,5 @@
 ColorScheme=kirkus
 
 [General]
-Name=kirkus
+Name=kirki
 Parent=FALLBACK/

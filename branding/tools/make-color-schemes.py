@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Writes the kirkus desktop colour schemes, and makes the dark one the default.
+"""Writes the kirki desktop colour schemes, and makes the dark one the default.
 
 usage: make-color-schemes.py [PROJECT_DIR]        (default: the project this script is in)
 
   overlay/installed/usr/share/color-schemes/KirkusDark.colors    Ink, Bone and Marigold (default)
   overlay/installed/usr/share/color-schemes/KirkusLight.colors   Bone, Ink and Marigold
   overlay/installed/etc/xdg/kdeglobals                           the dark scheme as everyone's default
-  overlay/installed/etc/xdg/plasmarc                             the kirkus Plasma Style as everyone's default
+  overlay/installed/etc/xdg/plasmarc                             the kirki Plasma Style as everyone's default
   overlay/installed/usr/share/konsole/kirkus.colorscheme, .profile, etc/xdg/konsolerc   Konsole
 
-Selected items are Marigold with Ink text, as everywhere else in kirkus.
+Selected items are Marigold with Ink text, as everywhere else in kirki.
 """
 import os, re, sys
 
@@ -77,7 +77,7 @@ def scheme(dark):
     return effects + body, icons
 
 
-for dark, file, name in ((True, "KirkusDark", "kirkus"), (False, "KirkusLight", "kirkus Light")):
+for dark, file, name in ((True, "KirkusDark", "kirki"), (False, "KirkusLight", "kirki Light")):
     colours, _ = scheme(dark)
     p = os.path.join(INST, "usr/share/color-schemes", file + ".colors")
     os.makedirs(os.path.dirname(p), exist_ok=True)
@@ -88,8 +88,8 @@ for dark, file, name in ((True, "KirkusDark", "kirkus"), (False, "KirkusLight", 
 # ---- the default for every account: /etc/xdg/kdeglobals, keeping its other sections ----
 p = os.path.join(INST, "etc/xdg/kdeglobals")
 old = open(p).read() if os.path.exists(p) else ""
-start = "# ---- kirkus colours: written by branding/tools/make-color-schemes.py ----\n"
-end = "# ---- end of kirkus colours ----\n"
+start = "# ---- kirki colours: written by branding/tools/make-color-schemes.py ----\n"
+end = "# ---- end of kirki colours ----\n"
 old = re.sub(re.escape(start) + r".*?" + re.escape(end), "", old, flags=re.S).rstrip("\n")
 colours, icons = scheme(True)
 block = (start + "[General]\nColorScheme=KirkusDark\n\n[Icons]\nTheme=" + icons + "\n\n" + colours
@@ -99,7 +99,7 @@ block = (start + "[General]\nColorScheme=KirkusDark\n\n[Icons]\nTheme=" + icons 
 open(p, "w").write((old + "\n\n" if old else "") + block)
 print("wrote", os.path.relpath(p, ROOT))
 
-# ---- Konsole: the kirkus colours for the terminal, as everyone's default profile ----
+# ---- Konsole: the kirki colours for the terminal, as everyone's default profile ----
 ANSI = [  # normal, intense
     ((46, 47, 53), (98, 96, 92)),        # black
     ((232, 98, 90), (240, 128, 118)),    # red
@@ -123,18 +123,18 @@ for i, (n, it) in enumerate(ANSI):
 p = os.path.join(INST, "usr/share/konsole/kirkus.colorscheme")
 os.makedirs(os.path.dirname(p), exist_ok=True)
 open(p, "w").write("".join(out) + "[General]\nBlur=false\nColorRandomization=false\n"
-                   "Description=kirkus\nOpacity=1\nWallpaper=\n")
+                   "Description=kirki\nOpacity=1\nWallpaper=\n")
 print("wrote", os.path.relpath(p, ROOT))
 p = os.path.join(INST, "usr/share/konsole/kirkus.profile")
-open(p, "w").write("[Appearance]\nColorScheme=kirkus\n\n[General]\nName=kirkus\nParent=FALLBACK/\n")
+open(p, "w").write("[Appearance]\nColorScheme=kirkus\n\n[General]\nName=kirki\nParent=FALLBACK/\n")
 print("wrote", os.path.relpath(p, ROOT))
-# ---- the Plasma Style everyone starts with: kirkus (see usr/share/plasma/desktoptheme/kirkus) ----
+# ---- the Plasma Style everyone starts with: kirki (see usr/share/plasma/desktoptheme/kirkus) ----
 p = os.path.join(INST, "etc/xdg/plasmarc")
-open(p, "w").write("# kirkus: the kirkus Plasma Style is everyone's default (System Settings → Plasma Style).\n"
+open(p, "w").write("# kirki: the kirki Plasma Style is everyone's default (System Settings → Plasma Style).\n"
                    "[Theme]\nname=kirkus\n")
 print("wrote", os.path.relpath(p, ROOT))
 p = os.path.join(INST, "etc/xdg/konsolerc")
-open(p, "w").write("# kirkus: the kirkus profile (kirkus colours) is Konsole's default. Pick another in\n"
+open(p, "w").write("# kirki: the kirki profile (kirki colours) is Konsole's default. Pick another in\n"
                    "# Konsole → Settings → Manage Profiles; your choice goes in ~/.config/konsolerc.\n"
                    "[Desktop Entry]\nDefaultProfile=kirkus.profile\n")
 print("wrote", os.path.relpath(p, ROOT))

@@ -1,5 +1,5 @@
 [Unit]
-Description=kirkus automatic weekly update
+Description=kirki automatic weekly update
 Documentation=file:///usr/local/bin/kirk-auto-update
 Wants=network-online.target
 After=network-online.target

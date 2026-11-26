@@ -1,6 +1,6 @@
 [Icon Theme]
-Name=kirkus Light
-Comment=Breeze icons with the kirkus bird as the start icon
+Name=kirki Light
+Comment=Breeze icons with the kirki bird as the start icon
 Inherits=breeze,hicolor
 Example=start-here-kde
 DisplayDepth=32

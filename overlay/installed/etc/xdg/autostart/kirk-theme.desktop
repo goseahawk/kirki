@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=kirkus colours
+Name=kirki colours
 Exec=/usr/local/bin/kirk-set-theme
 OnlyShowIn=KDE;
 NoDisplay=true

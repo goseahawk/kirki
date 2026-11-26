@@ -2,7 +2,7 @@
 <!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
  "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
 <policyconfig>
-  <vendor>kirkus</vendor>
+  <vendor>kirki</vendor>
   <action id="org.kirkus.touchpad-clicks">
     <description>Change whether the touchpad's physical clicks are used</description>
     <message>Authentication is required to change the touchpad click setting</message>

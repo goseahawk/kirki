@@ -36,7 +36,7 @@
     const size = (zip.size / 1024 ** 3).toFixed(1).replace(/\.0$/, "");
     const date = new Date(release.published_at).toLocaleDateString(undefined,
                    { day: "numeric", month: "long", year: "numeric" });
-    meta.textContent = `kirkus ${release.tag_name} · ${size} GB download · released ${date} · for M1 and M2 Macs`;
+    meta.textContent = `kirki ${release.tag_name} · ${size} GB download · released ${date} · for M1 and M2 Macs`;
   } catch (e) {
     // offline or rate-limited: keep the plain description
   }

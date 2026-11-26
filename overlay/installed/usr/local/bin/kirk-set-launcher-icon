@@ -1,6 +1,6 @@
 #!/bin/sh
-# One-shot per user: show the kirkus bird on the Application Launcher (Kickoff) at Plasma login.
-# It only replaces the stock KDE icon (or the older kirkus app icon), never one you picked yourself, and runs once; change it any
+# One-shot per user: show the kirki bird on the Application Launcher (Kickoff) at Plasma login.
+# It only replaces the stock KDE icon (or the older kirki app icon), never one you picked yourself, and runs once; change it any
 # time from the launcher's Configure dialog.
 flag="$HOME/.config/kirk-launcher-icon-2-done"
 [ -e "$flag" ] && exit 0

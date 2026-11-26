@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=kirkus wallpaper
+Name=kirki wallpaper
 Exec=/usr/local/bin/kirk-set-wallpaper
 OnlyShowIn=KDE;
 NoDisplay=true

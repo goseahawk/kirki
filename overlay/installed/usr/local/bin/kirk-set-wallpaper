@@ -1,8 +1,8 @@
 #!/bin/sh
-# One-shot per account, at login: show the kirkus wallpaper (the "kirkus" wallpaper package, which
+# One-shot per account, at login: show the kirki wallpaper (the "kirki" wallpaper package, which
 # has a dark and a light picture and follows the colour scheme).
-# New accounts already get it from the kirkus Global Theme. This moves older accounts over: desktops
-# showing the older kirkus wallpaper file or KDE's default ("Next") switch to the package. A
+# New accounts already get it from the kirki Global Theme. This moves older accounts over: desktops
+# showing the older kirki wallpaper file or KDE's default ("Next") switch to the package. A
 # wallpaper someone picked themselves is left alone. Runs once; change it any time by right-clicking
 # the desktop.
 flag="$HOME/.config/kirk-wallpaper-2-done"

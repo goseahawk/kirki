@@ -1,10 +1,10 @@
 {
     "KPackageStructure": "Plasma/LookAndFeel",
     "KPlugin": {
-        "Authors": [ { "Name": "kirkus" } ],
-        "Description": "Ink, Bone and Marigold: the kirkus colours, icons, Plasma Style, wallpaper and splash",
+        "Authors": [ { "Name": "kirki" } ],
+        "Description": "Ink, Bone and Marigold: the kirki colours, icons, Plasma Style, wallpaper and splash",
         "Id": "org.kirkus.splash",
-        "Name": "kirkus",
+        "Name": "kirki",
         "Version": "2.0"
     },
     "X-Plasma-APIVersion": "2"

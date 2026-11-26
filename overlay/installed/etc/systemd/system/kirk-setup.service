@@ -1,8 +1,8 @@
-# kirkus first-start setup: account, language, time zone and keyboard, before the login screen.
+# kirki first-start setup: account, language, time zone and keyboard, before the login screen.
 # Shown until it's completed (kirk-setup-finish leaves /var/lib/kirkus/setup-done), then never again.
 # Based on Asahi ALARM's calamares-cage.service.
 [Unit]
-Description=kirkus first-start setup
+Description=kirki first-start setup
 ConditionPathExists=!/var/lib/kirkus/setup-done
 Before=display-manager.service sddm.service
 After=systemd-user-sessions.service getty@tty1.service systemd-logind.service plymouth-start.service

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds the kirkus for Apple Silicon install image: a zip the Asahi installer writes onto a Mac.
+# Builds the kirki for Apple Silicon install image: a zip the Asahi installer writes onto a Mac.
 #
 #     sudo ./build.sh
 #
@@ -14,7 +14,7 @@
 #                  goes into installer_data.json and install.sh, which download from its releases
 #
 # Output, in out/:
-#   kirkus-VERSION-asahi.zip   the image: root.img (Btrfs), esp/ (EFI partition files), kirkus.icns
+#   kirki-VERSION-asahi.zip   the image: root.img (Btrfs), esp/ (EFI partition files), kirki.icns
 #   installer_data.json        tells the Asahi installer how to install it
 #   install.sh                 the command people run in macOS's Terminal
 #   *.sha256                   checksums
@@ -25,7 +25,7 @@ VERSION=${KIRK_VERSION:-$(date +%y.%m.%d)}
 [[ $VERSION =~ ^[0-9]{2}\.[0-9]{2}\.[0-9]{2}(\.[0-9]+)?$ ]] || { echo "Bad version '$VERSION': use YY.MM.DD or YY.MM.DD.N, e.g. 26.11.18 or 26.11.18.1"; exit 1; }
 REPO=${KIRK_REPO:-goseahawk/kirki}
 [[ $REPO =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ ]] || { echo "Bad repository '$REPO': use owner/name"; exit 1; }
-echo "Building kirkus $VERSION for Apple Silicon (releases from github.com/$REPO)"
+echo "Building kirki $VERSION for Apple Silicon (releases from github.com/$REPO)"
 
 HERE=$(cd "$(dirname "$0")" && pwd)
 WORK=$HERE/build
@@ -34,7 +34,7 @@ ROOT=$WORK/root
 IMG=$WORK/img
 STAGE=$WORK/stage
 OUT=$HERE/out
-NAME=kirkus-$VERSION-asahi
+NAME=kirki-$VERSION-asahi
 # Fixed per image, as Asahi ALARM's are: the installer copies the filesystems as they are.
 ROOT_UUID=984ab7e1-a547-43b4-949b-dda0fb90a8e5
 EFI_UUID=4B1D-2E5A
@@ -93,7 +93,7 @@ mkdir -p "$ROOT/kirk-src"
 cp -r "$HERE/overlay" "$HERE/image" "$ROOT/kirk-src/"
 
 # ---------------------------------------------------------------------------------------- set up
-echo "== Setting up kirkus in the image (this is the long part) =="
+echo "== Setting up kirki in the image (this is the long part) =="
 arch-chroot "$ROOT" env VERSION="$VERSION" ROOT_UUID="$ROOT_UUID" EFI_UUID="$EFI_UUID" \
   /bin/bash /kirk-src/image/setup.sh
 rm -rf "$ROOT/kirk-src"
@@ -105,7 +105,7 @@ size=$(du -B M -s -x "$ROOT" | cut -dM -f1)
 size=$((size + size / 8 + 512))       # room for the first start; it grows to fill its partition then
 echo "Contents: $(du -sh -x "$ROOT" | cut -f1); image: ${size} MiB"
 truncate -s "${size}M" "$STAGE/root.img"     # whole MiB, so a multiple of 4 KiB, as the installer needs
-mkfs.btrfs -q -U "$ROOT_UUID" -L kirkus "$STAGE/root.img"
+mkfs.btrfs -q -U "$ROOT_UUID" -L kirki "$STAGE/root.img"
 mount -o loop "$STAGE/root.img" "$IMG"
 for sv in @ @home @log @cache; do btrfs subvolume create "$IMG/$sv" >/dev/null; done
 umount "$IMG"
@@ -130,7 +130,7 @@ if ! arch-chroot "$IMG" grub-mkconfig -o /boot/grub/grub.cfg; then
   arch-chroot "$IMG" grub-mkconfig -o /boot/grub/grub.cfg
   chmod +x "$IMG/etc/grub.d/41_snapshots-btrfs" 2>/dev/null || true
 fi
-grep -q "vmlinuz-linux-asahi" "$IMG/boot/grub/grub.cfg" || { echo "grub.cfg has no kirkus entry."; exit 1; }
+grep -q "vmlinuz-linux-asahi" "$IMG/boot/grub/grub.cfg" || { echo "grub.cfg has no kirki entry."; exit 1; }
 cleanup
 losetup -d "$loopdev"
 
@@ -140,11 +140,11 @@ mkdir -p "$STAGE/esp/EFI/BOOT"
 cp "$ROOT/boot/grub/arm64-efi/core.efi" "$STAGE/esp/EFI/BOOT/BOOTAA64.EFI"
 [[ -f $ROOT/boot/efi/m1n1/boot.bin ]] || { echo "No m1n1/boot.bin: update-m1n1 didn't run in the image."; exit 1; }
 cp -r "$ROOT/boot/efi/m1n1" "$STAGE/esp/"
-cp "$HERE/asahi/kirkus.icns" "$STAGE/kirkus.icns"
+cp "$HERE/asahi/kirki.icns" "$STAGE/kirki.icns"
 
 echo "== Compressing (several minutes) =="
 rm -f "$OUT/$NAME.zip"
-(cd "$STAGE" && zip -q -r "$OUT/$NAME.zip" root.img esp kirkus.icns)
+(cd "$STAGE" && zip -q -r "$OUT/$NAME.zip" root.img esp kirki.icns)
 zip_size=$(stat -c %s "$OUT/$NAME.zip")
 (cd "$OUT" && sha256sum "$NAME.zip" > "$NAME.zip.sha256")
 sha=$(cut -d' ' -f1 "$OUT/$NAME.zip.sha256")
@@ -157,7 +157,7 @@ chmod 644 "$OUT"/*
 rm -rf "$STAGE" "$ROOT"
 
 echo
-echo "Done: kirkus $VERSION for Apple Silicon is in $OUT/"
+echo "Done: kirki $VERSION for Apple Silicon is in $OUT/"
 ls -l "$OUT"
 if ((zip_size >= 2 * 1024 * 1024 * 1024)); then
   echo

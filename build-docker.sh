@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds kirkus for Apple Silicon on a computer that isn't 64-bit ARM Linux, in a container:
+# Builds kirki for Apple Silicon on a computer that isn't 64-bit ARM Linux, in a container:
 # macOS on an Apple Silicon Mac (Docker Desktop or Podman), or Linux / Windows+WSL2 on anything.
 #
 #     ./build-docker.sh
@@ -40,7 +40,7 @@ case "$(uname -m)" in
   *)
     cat <<MSG
 
-NOTE: this computer is $(uname -m), and kirkus for Apple Silicon is 64-bit ARM, so the build runs
+NOTE: this computer is $(uname -m), and kirki for Apple Silicon is 64-bit ARM, so the build runs
 under emulation (qemu). Expect several hours. An Apple Silicon Mac, an ARM cloud machine or GitHub's
 "Build image" workflow is much faster.
 If $ENGINE can't run ARM containers yet, set that up first:

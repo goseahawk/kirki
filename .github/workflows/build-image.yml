@@ -1,4 +1,4 @@
-# Builds the kirkus for Apple Silicon image on GitHub's ARM servers and (optionally) publishes it as a
+# Builds the kirki for Apple Silicon image on GitHub's ARM servers and (optionally) publishes it as a
 # release. Run it from the Actions tab: "Build image" -> "Run workflow".
 name: Build image
 
@@ -59,7 +59,7 @@ jobs:
             exit 1
           fi
           echo "VERSION=$v" >> "$GITHUB_ENV"
-          echo "Building kirkus $v for Apple Silicon"
+          echo "Building kirki $v for Apple Silicon"
 
       - name: Make room and install the build tools
         run: |
@@ -74,7 +74,7 @@ jobs:
       - name: Check the size
         run: |
           sudo chown -R "$(id -u)" out
-          zip=out/kirkus-$VERSION-asahi.zip
+          zip=out/kirki-$VERSION-asahi.zip
           size=$(stat -c %s "$zip")
           echo "$zip: $((size / 1024 / 1024)) MiB"
           if (( size >= 2 * 1024 * 1024 * 1024 )); then
@@ -90,24 +90,24 @@ jobs:
           PUBLISH: ${{ inputs.publish }}
           NOTES: ${{ inputs.notes }}
         run: |
-          body="${NOTES:-kirkus $VERSION for Apple Silicon}
+          body="${NOTES:-kirki $VERSION for Apple Silicon}
 
           **Install:** on an Apple Silicon Mac (M1 or M2), open Terminal in macOS and run:
 
               curl -fsSL https://github.com/$GITHUB_REPOSITORY/releases/latest/download/install.sh | sh
 
-          Already running kirkus? This release is applied automatically after your next \`sudo pacman -Syu\`."
+          Already running kirki? This release is applied automatically after your next \`sudo pacman -Syu\`."
           draft=()
           [[ $PUBLISH == Draft* ]] && draft=(--draft)
           gh release create "$VERSION" out/* \
             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
-            --title "kirkus $VERSION" --notes "$body" "${draft[@]}"
+            --title "kirki $VERSION" --notes "$body" "${draft[@]}"
 
       - name: Keep the image with this run
         if: ${{ startsWith(inputs.publish, 'Just') }}
         uses: actions/upload-artifact@v4
         with:
-          name: kirkus-${{ env.VERSION }}-asahi
+          name: kirki-${{ env.VERSION }}-asahi
           path: out/*
           retention-days: 7
           compression-level: 0

@@ -1,5 +1,5 @@
-# kirkus Plasma Style. It has no pictures of its own: Plasma draws everything with Breeze ("default"),
-# in the colours of the current colour scheme, kirkus or kirkus Light.
+# kirki Plasma Style. It has no pictures of its own: Plasma draws everything with Breeze ("default"),
+# in the colours of the current colour scheme, kirki or kirki Light.
 [Wallpaper]
 defaultWallpaperTheme=kirkus
 defaultFileSuffix=.svg

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Weekly automatic updates: the Arch Linux ARM + Asahi system (pacman -Syu), then Flatpak apps. kirkus releases follow
+# Weekly automatic updates: the Arch Linux ARM + Asahi system (pacman -Syu), then Flatpak apps. kirki releases follow
 # on their own after the pacman upgrade (kirk-update).
 #
 #   sudo kirk-auto-update on       turn weekly updates on (the default)

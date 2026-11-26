@@ -1,4 +1,4 @@
-// kirkus: fastfetch with the kirkus bird and the brand colours.
+// kirki: fastfetch with the kirki bird and the brand colours.
 // If you create your own ~/.config/fastfetch/config.jsonc, it takes priority over this file.
 // The same config is also installed as a preset: fastfetch -c kirkus
 {

@@ -1,6 +1,6 @@
-# kirkus for Apple Silicon: notes for Claude
+# kirki: notes for Claude
 
-This repo (github.com/goseahawk/kirki) is the Apple Silicon (M1/M2) port of kirkus
+This repo (github.com/goseahawk/kirki) is kirki, the Apple Silicon (M1/M2) port of kirkus
 (github.com/goseahawk/kirkus), a simple, easy-to-use Arch Linux distribution with KDE Plasma. Here
 it's built on Arch Linux ARM with Asahi ALARM's kernel and Mac support: a disk image the Asahi
 installer writes from macOS, a setup window (Calamares) on the first start, and the same desktop,
@@ -10,6 +10,11 @@ changing anything.
 - `overlay/installed` started as a copy of kirkus's. Desktop and branding changes made in kirkus
   should usually be brought over here too (and the other way round); hardware, boot and update
   scripts differ on purpose.
+- The name shown to people is **kirki** everywhere (os-release, boot menu, setup window, theme names,
+  website, release files). Internal IDs keep kirkus's names so changes carry over between the two:
+  theme package IDs (`org.kirkus.splash`, icon/Plasma/SDDM/Plymouth theme folders and `Id`s,
+  `KirkusDark`), folders like `/usr/share/kirkus` and `calamares-kirkus`, the `kirk-*` commands. Never
+  rename an ID to kirki; change display names (`Name=`, `"Name"`) only.
 
 ## Working with the owner
 
@@ -22,7 +27,7 @@ changing anything.
   do (usually: publish a release, or run `sudo kirk-update --main` on the Mac).
 - For visual changes (logo, splash, login screen), render previews and offer a few options to choose
   from before applying.
-- The owner's own kirkus computer is a 2015 MacBook Air (Intel), which runs the regular kirkus, not
+- The owner's own kirkus computer is a 2015 MacBook Air (Intel), which runs kirkus, not
   this port.
 
 ## Docs
@@ -64,9 +69,9 @@ changing anything.
 - `branding/tools/make-screens.py` builds every screen image, the wallpaper and the app icon from
   those files; `make-fastfetch-logo.py` and `make-live-icons.py` do the rest. Rerun them after any
   logo change, and check that the login and splash bird are pixel-identical.
-- The desktop theme is called kirkus everywhere System Settings shows one: Global Theme (`org.kirkus.splash`,
+- The desktop theme is called kirki everywhere System Settings shows one: Global Theme (`org.kirkus.splash`,
   the default), Colors, Plasma Style, Icons (Breeze with the bird as KDE's start icon, so the launcher
-  shows it with no setting), wallpaper and splash; kirkus Light is the twin, paired for "Switch to
+  shows it with no setting), wallpaper and splash; kirki Light is the twin, paired for "Switch to
   Dark Mode at Night". A new account needs no scripts. DEVELOPMENT.md → "Desktop theme" has the
   details, including the login scripts that bring existing accounts over.
 - Don't ship a panel layout in the Global Theme: with a copy of KDE's in it, new accounts on Arch's
@@ -78,20 +83,20 @@ changing anything.
 - The colour schemes, `/etc/xdg/kdeglobals` and Konsole's profile come from
   `branding/tools/make-color-schemes.py`.
 - The wallpaper is "Quiet": flat Ink with a large bird one shade lighter (flat Bone and one shade
-  darker for kirkus Light), as the package `/usr/share/wallpapers/kirkus`. No gradients (the owner
+  darker for kirki Light), as the package `/usr/share/wallpapers/kirkus`. No gradients (the owner
   found the old one cheap; they band on real screens).
 - The Global Theme previews are real screenshots of a fresh account in that theme (Dolphin at Home,
   Konsole running fastfetch), so they match what people get. Retake them after any look change.
 - SVGs Plasma loads must suit Qt's strict SVG reader: self-closing elements, nothing nested oddly,
   no filters. A file Qt rejects shows nothing at all.
 - Every screen is Ink and centres its image at `x = W/2`, `y = H/2 - 50`, with even image sizes:
-  GRUB background = the bird; boot splash (Plymouth) = the word "kirkus", fading in; login screen
+  GRUB background = the bird; boot splash (Plymouth) = the word "kirki", fading in; login screen
   (SDDM) = the bird at 30% opacity; Plasma splash = the same bird brightening from 30% to full.
 - Palette: Ink `#16171b`, Bone `#f3efe6`, Marigold `#f2a93b`. Text on Marigold is Ink.
 
 ## Testing
 
-There's no way to boot kirkus or build the image from here (no ARM machine, and Arch Linux ARM's
+There's no way to boot kirki or build the image from here (no ARM machine, and Arch Linux ARM's
 servers are blocked), so:
 
 - Syntax-check every script (`bash -n`, `sh -n`, `python3 -m py_compile`) and validate XML/JSON.
@@ -107,7 +112,7 @@ servers are blocked), so:
   Ubuntu release from archive.ubuntu.com (Arch and Debian mirrors are blocked here) into a chroot,
   install `plasma-desktop kwin-x11 xvfb`, run `kwin_x11` and `plasmashell` on Xvfb as a test user
   with `XDG_CONFIG_DIRS=$HOME/.config/kdedefaults:/etc/xdg` (as startplasma sets it), and screenshot
-  with `import -window root`. Still say it was Ubuntu's Plasma under X11, not kirkus on hardware.
+  with `import -window root`. Still say it was Ubuntu's Plasma under X11, not kirki on hardware.
 
 Not yet confirmed on real hardware: everything specific to this port (see the end of
 DEVELOPMENT.md), plus, as on kirkus, tap to click and weekly automatic updates.

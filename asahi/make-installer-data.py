@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Writes installer_data.json, which tells the Asahi installer how to install kirkus.
+"""Writes installer_data.json, which tells the Asahi installer how to install kirki.
 
 Called by build.sh. The format is the Asahi installer's (see AsahiLinux/asahi-installer-data), with
-one extra top-level "kirkus" block that install.sh reads: where to download the image and its
+one extra top-level "kirki" block that install.sh reads: where to download the image and its
 checksum. install.sh downloads and checks the image itself and hands the installer a local copy,
 because the installer can't follow GitHub's download links (it drops the signed query string when it
 follows a redirect).
 
 The partition layout matches Asahi ALARM's: a 500 MB EFI partition (m1n1 stage 2, U-Boot, GRUB and
 the Mac's firmware, which the installer copies in) and the Btrfs root, which takes whatever space
-you give kirkus in the installer.
+you give kirki in the installer.
 """
 import argparse, json, re, sys
 
-# macOS versions whose system firmware the installer may pair kirkus with (as Asahi's own images).
+# macOS versions whose system firmware the installer may pair kirki with (as Asahi's own images).
 SUPPORTED_FW = ["12.3", "12.3.1", "13.5", "14.8.3"]
 EFI_SIZE = 500 * 1024 * 1024
 
@@ -39,22 +39,22 @@ def main():
         sys.exit("root.img must be a multiple of 4 KiB")
 
     data = {
-        "kirkus": {
-            "kirkus_version": a.version,
-            "kirkus_package": a.package,
-            "kirkus_url": f"https://github.com/{a.repo}/releases/download/{a.version}/{a.package}",
-            "kirkus_sha256": a.sha256,
-            "kirkus_size": a.package_size,
+        "kirki": {
+            "kirki_version": a.version,
+            "kirki_package": a.package,
+            "kirki_url": f"https://github.com/{a.repo}/releases/download/{a.version}/{a.package}",
+            "kirki_sha256": a.sha256,
+            "kirki_size": a.package_size,
         },
         "os_list": [
             {
-                "name": f"kirkus {a.version} (KDE Plasma)",
-                "default_os_name": "kirkus",
+                "name": f"kirki {a.version} (KDE Plasma)",
+                "default_os_name": "kirki",
                 "boot_object": "m1n1.bin",
                 "next_object": "m1n1/boot.bin",
                 # relative: install.sh points REPO_BASE at its local copy (REPO_BASE/os/<package>)
                 "package": a.package,
-                "icon": "kirkus.icns",
+                "icon": "kirki.icns",
                 "supported_fw": SUPPORTED_FW,
                 "partitions": [
                     {
@@ -78,7 +78,7 @@ def main():
             }
         ],
     }
-    # One key per line: install.sh reads the "kirkus_*" values with sed (macOS has no jq or python
+    # One key per line: install.sh reads the "kirki_*" values with sed (macOS has no jq or python
     # by default).
     json.dump(data, sys.stdout, indent=1)
     sys.stdout.write("\n")

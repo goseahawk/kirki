@@ -1,5 +1,5 @@
 #!/bin/sh
-# /etc/grub.d/06_kirk_splash -- kirkus
+# /etc/grub.d/06_kirk_splash -- kirki
 # Shows the boot splash image during GRUB's hidden wait instead of a black screen, and keeps
 # "tap Esc to show the menu".
 #
@@ -22,7 +22,7 @@ WAIT=${GRUB_TIMEOUT:-2}
 [ -f "$BG" ] || exit 0
 is_path_readable_by_grub "$BG" || exit 0
 
-echo "### kirkus: boot splash during the hidden wait ###"
+echo "### kirki: boot splash during the hidden wait ###"
 prepare_grub_to_access_device $(${grub_probe:-grub-probe} --target=device "$BG")
 cat <<EOF
 insmod png

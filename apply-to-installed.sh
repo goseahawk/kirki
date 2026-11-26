@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Updates an installed kirkus for Apple Silicon to this version of the project, without reinstalling.
+# Updates an installed kirki for Apple Silicon to this version of the project, without reinstalling.
 #
 # Run it from the project folder on the installed Mac:
 #     sudo ./apply-to-installed.sh
@@ -16,7 +16,7 @@ set -euo pipefail
 
 VERSION=${KIRK_VERSION:-$(date +%y.%m.%d)}
 [[ $VERSION =~ ^[0-9]{2}\.[0-9]{2}\.[0-9]{2}(\.[0-9]+)?$ ]] || { echo "Bad version '$VERSION': use YY.MM.DD or YY.MM.DD.N, e.g. 26.11.18 or 26.11.18.1"; exit 1; }
-BRAND="kirkus $VERSION"
+BRAND="kirki $VERSION"
 HERE=$(cd "$(dirname "$0")" && pwd)
 SRC=$HERE/overlay/installed
 [[ -d $SRC ]] || { echo "Run this from inside the project folder."; exit 1; }
@@ -25,7 +25,7 @@ SRC=$HERE/overlay/installed
 eval "$(sh "$SRC"/usr/local/bin/kirk-detect)"
 echo "This computer: $(sh "$SRC"/usr/local/bin/kirk-detect --summary)"
 if [[ $KIRK_APPLE_SILICON != yes && ${KIRK_FORCE:-} != yes ]]; then
-  echo "This is kirkus for Apple Silicon Macs, and this computer isn't one, so nothing was changed."
+  echo "This is kirki for Apple Silicon Macs, and this computer isn't one, so nothing was changed."
   echo "PCs and Intel Macs use the regular kirkus (github.com/goseahawk/kirkus): set REPO in"
   echo "/etc/kirk-update.conf to goseahawk/kirkus. (KIRK_FORCE=yes overrides this check.)"
   exit 1
@@ -61,8 +61,8 @@ for p in fastfetch ufw plasma-firewall; do
 done
 
 # ------------------------------------------------------------------------------------------- files
-echo "== kirkus files =="
-# Theme folders belong to kirkus entirely: replace them, so files a newer version dropped go too.
+echo "== kirki files =="
+# Theme folders belong to kirki entirely: replace them, so files a newer version dropped go too.
 rm -rf /usr/share/plymouth/themes/kirkus /boot/grub/themes/kirkus /usr/share/sddm/themes/kirkus \
        /usr/share/plasma/look-and-feel/org.kirkus.splash /usr/share/plasma/look-and-feel/org.kirkus.light \
        /usr/share/plasma/desktoptheme/kirkus /usr/share/icons/kirkus /usr/share/icons/kirkus-light \
@@ -118,7 +118,7 @@ echo "== boot splash =="
 # of mkinitcpio.conf, and put it back automatically if the rebuild fails.
 SPLASH_OK=no
 if [[ $(findmnt -no FSTYPE /) == btrfs && -f /etc/timeshift/timeshift.json ]] && command -v timeshift >/dev/null; then
-  timeshift --create --comments "kirkus $VERSION: before update" --scripted >/dev/null 2>&1 \
+  timeshift --create --comments "kirki $VERSION: before update" --scripted >/dev/null 2>&1 \
     && echo "Timeshift snapshot taken." || echo "(snapshot skipped)"
 fi
 cp /etc/mkinitcpio.conf /etc/mkinitcpio.conf.kirkus-backup
@@ -175,4 +175,4 @@ grub-mkconfig -o /boot/grub/grub.cfg \
   || echo "WARNING: grub-mkconfig failed; your existing boot menu was left as it was and still works."
 
 echo
-echo "kirkus $VERSION is installed. Restart to see everything."
+echo "kirki $VERSION is installed. Restart to see everything."

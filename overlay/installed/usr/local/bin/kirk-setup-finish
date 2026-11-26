@@ -1,5 +1,5 @@
 #!/bin/bash
-# The kirkus part of first-start setup, run by Calamares once it has created the account
+# The kirki part of first-start setup, run by Calamares once it has created the account
 # (usr/share/calamares-kirkus/modules/shellprocess-finish.conf):  kirk-setup-finish USERNAME
 # Records the install date, marks setup as done so it never shows again, and lets the login screen
 # start. Everything else (packages, branding, services) was set up when the image was built.
@@ -29,5 +29,5 @@ passwd -l root >/dev/null 2>&1 || true
 mkdir -p "${DONE%/*}"
 touch "$DONE"
 systemctl disable kirk-setup.service >/dev/null 2>&1 || true
-echo "kirkus setup finished for $user."
+echo "kirki setup finished for $user."
 exit 0

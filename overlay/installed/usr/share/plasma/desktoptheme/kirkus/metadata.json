@@ -1,9 +1,9 @@
 {
     "KPlugin": {
-        "Authors": [ { "Name": "kirkus" } ],
-        "Description": "The kirkus panel and pop-ups: Breeze's shapes in the kirkus colours (Ink, Bone and Marigold, or the light version), with the kirkus wallpaper",
+        "Authors": [ { "Name": "kirki" } ],
+        "Description": "The kirki panel and pop-ups: Breeze's shapes in the kirki colours (Ink, Bone and Marigold, or the light version), with the kirki wallpaper",
         "Id": "kirkus",
-        "Name": "kirkus",
+        "Name": "kirki",
         "Version": "1.0"
     },
     "X-Plasma-API": "5.0"

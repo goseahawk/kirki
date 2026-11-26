@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Builds every screen image of kirkus from the logo files in branding/build.
+"""Builds every screen image of kirki from the logo files in branding/build.
 
 usage: make-screens.py [PROJECT_DIR]        (default: the project this script is in)
 
 Needs rsvg-convert (librsvg), Pillow and numpy. Writes straight into overlay/:
   sddm/themes/kirkus/mark.png, plasma splash images/mark.png   the bird for dark screens
-  plymouth/themes/kirkus/wordmark.png, live/wordmark.png       the word "kirkus" for dark screens
+  plymouth/themes/kirkus/wordmark.png                          the word "kirki" for dark screens
   grub/themes/kirkus/background.png                            Ink, with the bird
   plasma splash preview.png                                    the splash's preview in System Settings
   wallpapers/kirkus/                                           the wallpaper ("Quiet"), dark and light
@@ -20,7 +20,7 @@ DEVELOPMENT.md says how to retake them.
 Every screen centres its image at x = W/2, y = H/2 - 50, and the images have even sizes, so the
 bird on the login screen and on the Plasma splash land on exactly the same pixels.
 """
-import os, re, subprocess, sys, tempfile
+import os, re, shutil, subprocess, sys, tempfile
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
@@ -28,7 +28,6 @@ ROOT = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else
                        os.path.join(os.path.dirname(__file__), "..", ".."))
 BUILD = os.path.join(ROOT, "branding", "build")
 INST = os.path.join(ROOT, "overlay", "installed")
-LIVE = os.path.join(ROOT, "overlay", "airootfs", "usr", "share", "kirkus", "live")
 FONTS = os.path.join(INST, "usr", "share", "fonts", "kirkus")
 
 INK, BONE, MARIGOLD = (0x16, 0x17, 0x1b), (0xf3, 0xef, 0xe6), (0xf2, 0xa9, 0x3b)
@@ -43,7 +42,11 @@ def render(svg_text, height):
     with tempfile.TemporaryDirectory() as t:
         p = os.path.join(t, "in.svg")
         open(p, "w").write(svg_text)
-        subprocess.run(["rsvg-convert", "-h", str(height), p, "-o", p + ".png"], check=True)
+        if shutil.which("rsvg-convert"):
+            subprocess.run(["rsvg-convert", "-h", str(height), p, "-o", p + ".png"], check=True)
+        else:
+            import cairosvg
+            cairosvg.svg2png(url=p, write_to=p + ".png", output_height=height)
         return Image.open(p + ".png").convert("RGBA")
 
 
@@ -98,7 +101,6 @@ groups = re.findall(r"<g [^>]*>.*?</g>", logo_dark, re.S)
 word_svg = logo_dark.replace(groups[0], "")
 word = at_ink_height(word_svg, WORD_INK)
 save(word, INST, "usr/share/plymouth/themes/kirkus/wordmark.png")
-save(word, LIVE, "wordmark.png")
 
 # ---- GRUB background: Ink and the bird ----
 bg = Image.new("RGBA", SCREEN, INK + (255,))
@@ -123,7 +125,7 @@ text((SCREEN[0] / 2, 44), "Tuesday, November 25     9:41 AM", 15, DIM, "ma")
 fx, fy = SCREEN[0] / 2 - 140, my + mark.height + 84
 d.rounded_rectangle([fx * S, fy * S, (fx + 280) * S, (fy + 42) * S], radius=21 * S,
                     fill=FIELD, outline=MARIGOLD, width=S)      # focused, as the real screen starts
-text((fx + 18, fy + 21), "Password for kirkus", 15, HINT, "lm")
+text((fx + 18, fy + 21), "Password for kirki", 15, HINT, "lm")
 gx, gy = fx + 280 - 5 - 32, fy + 5
 go = Image.new("RGBA", big.size)
 ImageDraw.Draw(go).ellipse([gx * S, gy * S, (gx + 32) * S, (gy + 32) * S], fill=MARIGOLD + (89,))
@@ -177,8 +179,8 @@ def write(text, *path):
 # from the first frame of a new account and on the lock screen. Plasma shows images_dark/ with a dark
 # colour scheme and images/ with a light one.
 WP = os.path.join(INST, "usr/share/wallpapers/kirkus")
-write('{\n    "KPlugin": {\n        "Authors": [ { "Name": "kirkus" } ],\n        "Id": "kirkus",\n'
-      '        "Name": "kirkus"\n    }\n}\n', WP, "metadata.json")
+write('{\n    "KPlugin": {\n        "Authors": [ { "Name": "kirki" } ],\n        "Id": "kirkus",\n'
+      '        "Name": "kirki"\n    }\n}\n', WP, "metadata.json")
 write(QUIET_DARK, WP, "contents/images_dark/2880x1800.svg")
 write(QUIET_LIGHT, WP, "contents/images/2880x1800.svg")
 save(render(QUIET_DARK, 250).convert("RGB"), WP, "contents/screenshot.png")
@@ -196,16 +198,16 @@ icon = (f'<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" '
         '</svg>\n')
 write(icon, INST, "usr/share/icons/hicolor/scalable/apps/kirkus-mark.svg")
 
-# ---- icon themes "kirkus" (Breeze Dark underneath) and "kirkus Light" (Breeze underneath). They
-#      replace KDE's own logo, a "K" that looks like the old kirkus mark, with the bird wherever KDE
+# ---- icon themes "kirki" (Breeze Dark underneath) and "kirki Light" (Breeze underneath). They
+#      replace KDE's own logo, a "K" that looks like the old kirki mark, with the bird wherever KDE
 #      uses it as the start icon: the Application Launcher's default icon, its menu entries and the
 #      like. Everything else comes from Breeze. ----
 START_ICONS = ("start-here", "start-here-symbolic", "start-here-kde", "start-here-kde-symbolic",
                "start-here-kde-plasma", "start-here-kde-plasma-symbolic")
-for theme, name, base in (("kirkus", "kirkus", "breeze-dark"), ("kirkus-light", "kirkus Light", "breeze")):
+for theme, name, base in (("kirkus", "kirki", "breeze-dark"), ("kirkus-light", "kirki Light", "breeze")):
     write("[Icon Theme]\n"
           f"Name={name}\n"
-          f"Comment=Breeze icons with the kirkus bird as the start icon\n"
+          f"Comment=Breeze icons with the kirki bird as the start icon\n"
           f"Inherits={base},hicolor\n"
           "Example=start-here-kde\n"
           "DisplayDepth=32\n"

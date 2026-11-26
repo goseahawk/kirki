@@ -1,5 +1,5 @@
 #!/bin/bash
-# kirkus first-start setup: shows the setup window (Calamares, full screen in the cage kiosk
+# kirki first-start setup: shows the setup window (Calamares, full screen in the cage kiosk
 # compositor) until it has been completed, then exits so the login screen can start.
 # Run once by kirk-setup.service, on the first start after installing. Based on Asahi ALARM's
 # first-time-setup-cage.sh (asahi-calamares-configs, MIT licence).

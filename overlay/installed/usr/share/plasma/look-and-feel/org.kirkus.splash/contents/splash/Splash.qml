@@ -1,6 +1,6 @@
-// kirkus startup splash (shown after login while Plasma loads).
+// kirki startup splash (shown after login while Plasma loads).
 //
-// The kirkus bird, in exactly the spot and at exactly the size the login screen draws it. It starts at
+// The kirki bird, in exactly the spot and at exactly the size the login screen draws it. It starts at
 // the login screen's faded opacity and brightens to full, so logging in looks like the bird lighting up.
 import QtQuick
 

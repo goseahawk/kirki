@@ -1,7 +1,7 @@
 [SddmGreeterTheme]
-Name=kirkus
+Name=kirki
 Description=Matches the boot splash: the logo and name stay put, and the login form sits underneath.
-Author=kirkus
+Author=kirki
 Type=sddm-theme
 Version=1.0
 Screenshot=preview.png

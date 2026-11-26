@@ -7,6 +7,6 @@ for bus in /run/user/*/bus; do
   runuser -u "$user" -- env DBUS_SESSION_BUS_ADDRESS="unix:path=$bus" \
     gdbus call --session --dest org.freedesktop.Notifications \
       --object-path /org/freedesktop/Notifications --method org.freedesktop.Notifications.Notify \
-      kirkus 0 kirkus-logo "$1" "$2" '[]' '{}' 15000 >/dev/null 2>&1 || true
+      kirki 0 kirkus-logo "$1" "$2" '[]' '{}' 15000 >/dev/null 2>&1 || true
 done
 exit 0

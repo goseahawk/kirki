@@ -1,5 +1,5 @@
-// kirkus boot splash (Plymouth "script" theme).
-// Ink background and the word "kirkus", fading in while the system starts. It's centred on the
+// kirki boot splash (Plymouth "script" theme).
+// Ink background and the word "kirki", fading in while the system starts. It's centred on the
 // same spot where GRUB, the login screen and the Plasma splash draw the bird.
 // Press Esc during boot to see the normal boot messages behind it.
 
@@ -9,7 +9,7 @@ Window.SetBackgroundBottomColor(0.086, 0.090, 0.106);
 W = Window.GetWidth();
 H = Window.GetHeight();
 
-// ---- the word "kirkus", fading in ----
+// ---- the word "kirki", fading in ----
 lock.image = Image("wordmark.png");
 lock.x = Window.GetX() + Math.Int(W / 2 - lock.image.GetWidth() / 2);
 lock.y = Window.GetY() + Math.Int(H / 2 - lock.image.GetHeight() / 2) - 50;

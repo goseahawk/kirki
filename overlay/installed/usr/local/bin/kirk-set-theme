@@ -1,14 +1,14 @@
 #!/bin/sh
-# One-shot per account, at login: put the account on the kirkus theme (the kirkus colours, icons,
-# Plasma Style and splash, as the kirkus Global Theme sets them). New accounts already have it from
+# One-shot per account, at login: put the account on the kirki theme (the kirki colours, icons,
+# Plasma Style and splash, as the kirki Global Theme sets them). New accounts already have it from
 # /etc/xdg; this brings existing accounts over, including any an earlier version of this script
-# missed. Only accounts on KDE's Breeze colours or on kirkus are changed: a look someone picked
-# (kirkus Light included) is left alone. Panels, widgets and the wallpaper are never touched here.
+# missed. Only accounts on KDE's Breeze colours or on kirki are changed: a look someone picked
+# (kirki Light included) is left alone. Panels, widgets and the wallpaper are never touched here.
 #
 # KDE's apply tools can't be trusted alone: when they think a theme is already set (and /etc/xdg makes
 # them think so) they change nothing and still report success. So after running the Global Theme
 # tool, this checks each setting, writes whatever is still wrong into the account's own config, and
-# only stops trying once the colours really are kirkus. It logs to the journal:
+# only stops trying once the colours really are kirki. It logs to the journal:
 #     journalctl -t kirkus-theme
 flag="$HOME/.config/kirk-theme-4-done"
 [ -e "$flag" ] && exit 0
@@ -17,15 +17,15 @@ SCHEME=/usr/share/color-schemes/KirkusDark.colors
 log() { logger -t kirkus-theme "$*" 2>/dev/null; }
 done_() { mkdir -p "$CONF"; touch "$flag"; exit 0; }
 
-# ---- is this account on Breeze or kirkus? Read its own files only: kreadconfig6 would also read the
-#      system-wide default in /etc/xdg, which is always kirkus. ----
+# ---- is this account on Breeze or kirki? Read its own files only: kreadconfig6 would also read the
+#      system-wide default in /etc/xdg, which is always kirki. ----
 scheme_in() { sed -n '/^\[General\]/,/^\[/s/^ColorScheme=//p' "$1" 2>/dev/null | head -1; }
 own=$(scheme_in "$CONF/kdeglobals")
 [ -n "$own" ] || own=$(scheme_in "$CONF/kdedefaults/kdeglobals")
 if [ -z "$own" ]; then
-  # never chose a scheme: with no colours of its own it already shows kirkus; colours without a name
+  # never chose a scheme: with no colours of its own it already shows kirki; colours without a name
   # are KDE's default, Breeze
-  grep -q '^\[Colors:Window\]' "$CONF/kdeglobals" 2>/dev/null || { log "already on the kirkus defaults"; done_; }
+  grep -q '^\[Colors:Window\]' "$CONF/kdeglobals" 2>/dev/null || { log "already on the kirki defaults"; done_; }
   own=Breeze
 fi
 case $own in
@@ -92,8 +92,8 @@ if [ -n "$changed" ]; then
 fi
 
 if colours_ok; then
-  log "kirkus theme applied (the account was on $own)"
+  log "kirki theme applied (the account was on $own)"
   done_
 fi
-log "colours still not kirkus; will try again at next login"
+log "colours still not kirki; will try again at next login"
 exit 0

@@ -1,9 +1,9 @@
-# Developing kirkus for Apple Silicon
+# Developing kirki
 
-How kirkus for Apple Silicon is put together, for anyone changing it or building their own image. If
+How kirki is put together, for anyone changing it or building their own image. If
 you just want to install and use it, see the [README](README.md).
 
-This is the Apple Silicon port of [kirkus](https://github.com/goseahawk/kirkus). The desktop
+kirki is the Apple Silicon port of [kirkus](https://github.com/goseahawk/kirkus), under its own name. The desktop
 (`overlay/installed`: theme, login screen, splash, About page, updates, firewall) is the same; what's
 different is everything below it: Arch Linux ARM instead of Arch, the Asahi kernel and boot chain, a
 disk image written from macOS instead of an ISO, and a setup window on the first start instead of an
@@ -19,23 +19,23 @@ installer.
 | `image/mirrorlist.asahi-alarm` | where the Asahi ALARM packages come from |
 | `asahi/install.sh` | the script people run in macOS's Terminal; published with each release |
 | `asahi/make-installer-data.py` | writes `installer_data.json` for the Asahi installer |
-| `asahi/kirkus.icns` | the icon in the Mac's startup picker (`branding/tools/make-icns.py` makes it) |
+| `asahi/kirki.icns` | the icon in the Mac's startup picker (`branding/tools/make-icns.py` makes it) |
 | `apply-to-installed.sh` | updates an existing install to the current project |
 | `overlay/installed/` | files in every installed system, including the first-start setup |
 | `branding/` | the logo files and the tools that make every screen image from them |
 | `site/` | the website, published to GitHub Pages by `.github/workflows/website.yml` |
 | `.github/workflows/build-image.yml` | builds the image on GitHub's ARM servers and publishes a release |
 
-## How a Mac starts kirkus
+## How a Mac starts kirki
 
-    Apple's boot picker → m1n1 (stage 1, written by the installer into kirkus's macOS-style stub)
+    Apple's boot picker → m1n1 (stage 1, written by the installer into kirki's macOS-style stub)
       → m1n1 stage 2 + U-Boot + device trees   (EFI partition: m1n1/boot.bin)
       → GRUB                                    (EFI partition: EFI/BOOT/BOOTAA64.EFI)
       → linux-asahi + initramfs                 (root filesystem: /@/boot)
 
 - The **Asahi installer**, run from macOS, shrinks macOS, makes three partitions (a small APFS stub
   that holds stage 1 and appears in the boot picker, a 500 MB EFI partition, and the root
-  partition), copies the Mac's firmware into the EFI partition (`vendorfw/`), and writes kirkus's
+  partition), copies the Mac's firmware into the EFI partition (`vendorfw/`), and writes kirki's
   `root.img` and `esp/` files.
 - `m1n1/boot.bin` is kept up to date by `update-m1n1` (from `asahi-scripts`), which pacman runs
   whenever m1n1, U-Boot or the kernel changes. It's built into the image at `/boot/efi/m1n1/` and
@@ -52,7 +52,7 @@ installer.
 
 The UUIDs of the root filesystem (`984ab7e1-...`) and the EFI partition (`4B1D-2E5A`) are fixed in
 `build.sh` and the same on every install, as with Asahi ALARM's images: the installer copies the
-filesystems as they are, and GRUB, fstab and Timeshift rely on them. Two kirkus installs on one Mac
+filesystems as they are, and GRUB, fstab and Timeshift rely on them. Two kirki installs on one Mac
 would clash; that's not supported.
 
 ## Building the image
@@ -77,14 +77,14 @@ What `build.sh` does:
    against its `.md5`; reused for a week) and unpacks it.
 2. Runs `image/setup.sh` inside it with `arch-chroot`. That adds the Asahi ALARM repository and its
    signing key, swaps the generic kernel for `linux-asahi` + `asahi-meta` + `asahi-desktop-meta`,
-   installs the kirkus desktop, builds the GRUB image, writes fstab, installs `overlay/installed`,
+   installs the kirki desktop, builds the GRUB image, writes fstab, installs `overlay/installed`,
    rebuilds the initramfs and enables the services. Packages in its `OPTIONAL` list (Timeshift,
    grub-btrfs, ufw, plasma-firewall, fastfetch) are skipped with a warning if Arch Linux ARM doesn't
    have them; everything else is required.
-3. Makes `root.img`: Btrfs with the kirkus subvolumes `@`, `@home`, `@log` and `@cache`, written with
+3. Makes `root.img`: Btrfs with the kirki subvolumes `@`, `@home`, `@log` and `@cache`, written with
    zstd compression to keep the image small, then runs `grub-mkconfig` on it.
-4. Zips `root.img`, the EFI partition files (`esp/`) and `kirkus.icns` into
-   `out/kirkus-VERSION-asahi.zip`, and writes `installer_data.json`, `install.sh` and checksums.
+4. Zips `root.img`, the EFI partition files (`esp/`) and `kirki.icns` into
+   `out/kirki-VERSION-asahi.zip`, and writes `installer_data.json`, `install.sh` and checksums.
 
 **Size:** GitHub release files must be under 2 GiB, and the workflow stops if the zip is bigger.
 The package list in `image/setup.sh` is where to make room.
@@ -95,7 +95,7 @@ The package list in `image/setup.sh` is where to make room.
 one. It:
 
 1. downloads `installer_data.json` from the newest release,
-2. downloads the image named in its `kirkus` block to `/tmp/kirkus-download` (resumable) and checks
+2. downloads the image named in its `kirki` block to `/tmp/kirki-download` (resumable) and checks
    its SHA-256,
 3. downloads the Asahi installer as Asahi ALARM publishes it (`asahi-alarm.org/latest`), and
 4. starts it with `REPO_BASE` pointing at the local copy.
@@ -103,18 +103,18 @@ one. It:
 Why download first: the Asahi installer reads the zip over HTTP with range requests, and when it
 follows a redirect it keeps only the path and drops the query string. GitHub's release downloads
 redirect to signed URLs whose signature is in the query string, so the installer can't read them.
-Giving it a local file avoids that, and means GitHub Releases is the only hosting kirkus needs.
+Giving it a local file avoids that, and means GitHub Releases is the only hosting kirki needs.
 
 `installer_data.json` follows the Asahi installer's format: one OS entry with a 500 MB EFI partition
 (`copy_firmware`, `copy_installer_data`, files from `esp/`) and the root partition (`root.img`,
-`expand`: it takes the rest of the space you give kirkus). The top-level `kirkus` block is ours;
+`expand`: it takes the rest of the space you give kirki). The top-level `kirki` block is ours;
 the installer ignores it.
 
 ### Testing an image
 
 Build it, then on an Apple Silicon Mac, from the folder with the `out/` files:
 
-    KIRK_INSTALLER_DATA=file://$PWD/out/installer_data.json KIRK_PACKAGE=$PWD/out/kirkus-*-asahi.zip sh out/install.sh
+    KIRK_INSTALLER_DATA=file://$PWD/out/installer_data.json KIRK_PACKAGE=$PWD/out/kirki-*-asahi.zip sh out/install.sh
 
 Or publish a **draft** release from the workflow: drafts aren't "latest", so nobody else gets them.
 Point `KIRK_INSTALLER_DATA` at the draft's `installer_data.json` (download it first; draft files need
@@ -126,7 +126,7 @@ The image has no accounts (Arch Linux ARM's `alarm` account is removed and root 
 `kirk-setup.service` runs before the login screen (`Before=display-manager.service`) and shows
 **Calamares** full screen in the `cage` compositor, configured in
 `overlay/installed/usr/share/calamares-kirkus/`: welcome, language and time zone (suggested from
-`ipapi.co`, as kirkus on PCs does), keyboard, and the account. It's the same approach and the same
+`ipapi.co`, as kirkus does on PCs), keyboard, and the account. It's the same approach and the same
 Calamares package as Asahi ALARM's own first-boot setup, without its "choose a desktop" step.
 
 - `kirk-setup` reads the Mac's keyboard type from the device tree (as Asahi does) and pre-selects the
@@ -152,7 +152,7 @@ Calamares package as Asahi ALARM's own first-boot setup, without its "choose a d
 The battery and power checks (`kirk-about-battery`, `kirk-auto-update`, `kirk-touchpad-setup`) go by
 a power supply's `type` rather than its name, so they work with Asahi's `macsmc-battery` and
 `macsmc-ac`. Everything else Mac-specific (keyboard, Touch Bar, speakers, firmware) comes from the
-Asahi packages; kirkus doesn't add its own fixes. `speakersafetyd` is enabled, since the speakers stay
+Asahi packages; kirki doesn't add its own fixes. `speakersafetyd` is enabled, since the speakers stay
 off without it.
 
 ## Applying changes to an installed system

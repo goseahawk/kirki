@@ -1,18 +1,18 @@
 #!/bin/bash
-# Turns an Arch Linux ARM root filesystem into kirkus for Apple Silicon. Runs INSIDE the image's
+# Turns an Arch Linux ARM root filesystem into kirki for Apple Silicon. Runs INSIDE the image's
 # chroot, started by build.sh, which sets:
-#   VERSION     kirkus version, YY.MM.DD
+#   VERSION     kirki version, YY.MM.DD
 #   ROOT_UUID   the root filesystem's UUID (fixed per image; the Asahi installer copies it as is)
 #   EFI_UUID    the EFI partition's FAT volume ID, as XXXX-XXXX
 # and copies the project to /kirk-src (left out of the finished image).
 #
 # What it does, in the order the Asahi ALARM image builder (asahi-alarm/asahi-alarm-builder) does it:
 # Asahi ALARM repository and kernel, Apple Silicon support, GRUB as an EFI image for U-Boot; then the
-# kirkus desktop, branding, services and the first-start setup.
+# kirki desktop, branding, services and the first-start setup.
 set -euo pipefail
 : "${VERSION:?}" "${ROOT_UUID:?}" "${EFI_UUID:?}"
 SRC=/kirk-src
-BRAND="kirkus $VERSION"
+BRAND="kirki $VERSION"
 say() { echo; echo "### $*"; }
 
 # ------------------------------------------------------------------------------------- pacman
@@ -60,11 +60,11 @@ PKGS=(
   # the first-start setup
   calamares cage xorg-server-xwayland
 )
-# Wanted, but kirkus still works without them: a missing one is reported and skipped, so a package
+# Wanted, but kirki still works without them: a missing one is reported and skipped, so a package
 # that Arch Linux ARM hasn't built (yet) for aarch64 doesn't stop the build.
 OPTIONAL=(fastfetch ufw plasma-firewall timeshift grub-btrfs inotify-tools)
 
-say "Installing kirkus packages"
+say "Installing kirki packages"
 pacman -S --needed --noconfirm "${PKGS[@]}"
 MISSING=()
 for p in "${OPTIONAL[@]}"; do
@@ -100,12 +100,12 @@ rm -f /tmp/grub-core.cfg
 
 # ------------------------------------------------------------------------------------- fstab
 say "fstab"
-# The kirkus Btrfs layout: @ (/), @home, and @log and @cache kept out of snapshots. The root
+# The kirki Btrfs layout: @ (/), @home, and @log and @cache kept out of snapshots. The root
 # filesystem is grown to fill its partition on the first start (x-systemd.growfs). No subvolid:
 # Timeshift restores replace @.
 O=noatime,compress=zstd:1,space_cache=v2,discard=async
 cat > /etc/fstab <<EOF
-# kirkus for Apple Silicon
+# kirki for Apple Silicon
 UUID=$ROOT_UUID  /                      btrfs  $O,subvol=@,x-systemd.growfs  0 0
 UUID=$ROOT_UUID  /home                  btrfs  $O,subvol=@home      0 0
 UUID=$ROOT_UUID  /var/log               btrfs  $O,subvol=@log       0 0
@@ -118,7 +118,7 @@ say "Accounts"
 # Arch Linux ARM ships an 'alarm' account (password alarm) and root with password root.
 userdel -r alarm 2>/dev/null || true
 passwd -l root >/dev/null
-# systemd-firstboot would stop the first start to ask questions; the kirkus setup asks them instead
+# systemd-firstboot would stop the first start to ask questions; the kirki setup asks them instead
 mkdir -p /etc/systemd/system/systemd-firstboot.service.d
 cat > /etc/systemd/system/systemd-firstboot.service.d/no-prompt.conf <<'EOF'
 [Service]
@@ -129,10 +129,10 @@ EOF
 sed -i 's/^#\(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen
 locale-gen
 echo LANG=en_US.UTF-8 > /etc/locale.conf
-echo kirkus > /etc/hostname
+echo kirki > /etc/hostname
 
-# ------------------------------------------------------------------------------------- kirkus
-say "kirkus files"
+# ------------------------------------------------------------------------------------- kirki
+say "kirki files"
 # File by file, owned by root: programs (usr/local/bin, etc/grub.d) 755, everything else 644. The
 # same rule as apply-to-installed.sh, so an update installs exactly what a fresh image has.
 (cd "$SRC/overlay/installed" && find . -type f -printf '%P\0') |
@@ -243,4 +243,4 @@ pacman -Scc --noconfirm >/dev/null 2>&1 || true
 rm -rf /var/cache/pacman/pkg/* /tmp/* /root/.cache
 # each install gets its own machine ID on its first start
 : > /etc/machine-id
-echo "kirkus $VERSION is set up in the image."
+echo "kirki $VERSION is set up in the image."

@@ -1,5 +1,5 @@
 [Unit]
-Description=Apply the newest kirkus release
+Description=Apply the newest kirki release
 Documentation=file:///etc/kirk-update.conf
 Wants=network-online.target
 After=network-online.target

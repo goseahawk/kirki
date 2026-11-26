@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Makes asahi/kirkus.icns, the icon macOS's startup picker (hold the power button) shows for kirkus.
+"""Makes asahi/kirki.icns, the icon macOS's startup picker (hold the power button) shows for kirki.
 
-The Asahi installer copies it onto the kirkus volume. It's the app icon (branding/build/icon.svg),
+The Asahi installer copies it onto the kirki volume. It's the app icon (branding/build/icon.svg),
 rendered at 128, 256, 512 and 1024 px and stored as PNGs inside an .icns file, which every macOS
 that Asahi supports reads. Needs rsvg-convert (librsvg) or the cairosvg Python module.
 
@@ -12,7 +12,7 @@ import os, shutil, struct, subprocess, sys, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 SRC = os.path.join(ROOT, "branding", "build", "icon.svg")
-OUT = os.path.join(ROOT, "asahi", "kirkus.icns")
+OUT = os.path.join(ROOT, "asahi", "kirki.icns")
 # icns element types that hold a PNG of the given size
 TYPES = [(b"ic07", 128), (b"ic08", 256), (b"ic09", 512), (b"ic10", 1024)]
 

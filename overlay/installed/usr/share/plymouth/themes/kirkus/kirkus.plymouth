@@ -1,6 +1,6 @@
 [Plymouth Theme]
-Name=kirkus
-Description=kirkus boot splash
+Name=kirki
+Description=kirki boot splash
 ModuleName=script
 
 [script]

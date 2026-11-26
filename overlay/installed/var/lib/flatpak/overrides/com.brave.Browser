@@ -1,4 +1,4 @@
-# kirkus: let this browser install web apps (it writes their menu entries and icons).
+# kirki: let this browser install web apps (it writes their menu entries and icons).
 # Plain home paths, as the browser asks: the xdg-data/ form clashes with its own links and the
 # browser then fails to start.
 [Context]

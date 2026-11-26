@@ -1,9 +1,9 @@
-# kirkus: hide Discover's "Software Update" page in System Settings. kirkus has its own pages instead:
+# kirki: hide Discover's "Software Update" page in System Settings. kirki has its own pages instead:
 # "System Update" (weekly automatic updates) and "Flatpak Update" (opens Discover's Updates page).
 [KDE Control Module Restrictions][$i]
 kcm_updates=false
 
-# ---- kirkus colours: written by branding/tools/make-color-schemes.py ----
+# ---- kirki colours: written by branding/tools/make-color-schemes.py ----
 [General]
 ColorScheme=KirkusDark
 
@@ -156,4 +156,4 @@ DefaultLightLookAndFeel=org.kirkus.light
 LookAndFeelPackage=org.kirkus.splash
 contrast=4
 widgetStyle=Breeze
-# ---- end of kirkus colours ----
+# ---- end of kirki colours ----

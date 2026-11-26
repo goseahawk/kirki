@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Applies the newest published kirkus release, if it's newer than what's installed.
+# Applies the newest published kirki release, if it's newer than what's installed.
 #
 #   sudo kirk-update            check now and apply if there's a newer release
 #   sudo kirk-update --check    only say whether there's one
@@ -26,7 +26,7 @@ case ${1:-} in
   *) echo "usage: kirk-update [--check | --main]"; exit 2 ;;
 esac
 if [[ $mode == auto && $AUTO_UPDATE != yes ]]; then
-  echo "Automatic kirkus updates are off (AUTO_UPDATE in /etc/kirk-update.conf)."; exit 0
+  echo "Automatic kirki updates are off (AUTO_UPDATE in /etc/kirk-update.conf)."; exit 0
 fi
 if [[ $mode == auto && ! -e /var/lib/kirkus/setup-done ]]; then
   echo "First-start setup isn't finished yet; checking after the next upgrade."; exit 0
@@ -44,7 +44,7 @@ newer() { [[ $1 != "$2" && $(printf '%s\n%s\n' "$1" "$2" | sort -V | tail -1) ==
 apply_source() {
   local url=$1 version=$2 label=$3 src
   # work stays global so the cleanup on exit can still see it
-  echo "Updating kirkus ${installed:-?} -> $label"
+  echo "Updating kirki ${installed:-?} -> $label"
   mkdir -p "$CACHE"
   work=$(mktemp -d "$CACHE/update.XXXXXX")
   trap 'rm -rf "$work"' EXIT
@@ -56,8 +56,8 @@ apply_source() {
   # where this version came from, for: grep SOURCE /etc/kirk-release
   if grep -q '^SOURCE=' /etc/kirk-release; then sed -i "s|^SOURCE=.*|SOURCE=$label|" /etc/kirk-release
   else echo "SOURCE=$label" >> /etc/kirk-release; fi
-  echo "kirkus $version applied ($label). Restart to see everything."
-  /usr/local/bin/kirk-notify "kirkus $version installed" "Restart your computer to finish updating."
+  echo "kirki $version applied ($label). Restart to see everything."
+  /usr/local/bin/kirk-notify "kirki $version installed" "Restart your computer to finish updating."
 }
 
 if [[ $mode == main ]]; then
@@ -77,15 +77,15 @@ url=$(curl -fsSL --max-time 30 -o /dev/null -w '%{url_effective}' "https://githu
   || { echo "Couldn't reach GitHub; skipping."; exit 0; }
 tag=${url##*/tag/}
 if [[ $url != */tag/* || ! $tag =~ $ver_re ]]; then
-  echo "No kirkus release found on github.com/$REPO (got '$url')."; exit 0
+  echo "No kirki release found on github.com/$REPO (got '$url')."; exit 0
 fi
 
 applied=$(cat "$STATE" 2>/dev/null || true)
 if [[ $tag == "$applied" ]] || { [[ $installed =~ $ver_re ]] && ! newer "$tag" "$installed"; }; then
-  echo "kirkus ${installed:-?} is up to date (latest release: $tag)."; exit 0
+  echo "kirki ${installed:-?} is up to date (latest release: $tag)."; exit 0
 fi
 if [[ $mode == check ]]; then
-  echo "kirkus $tag is available (installed: ${installed:-unknown}). Apply it with: sudo kirk-update"
+  echo "kirki $tag is available (installed: ${installed:-unknown}). Apply it with: sudo kirk-update"
   exit 0
 fi
 

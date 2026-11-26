@@ -1,5 +1,5 @@
 #!/bin/sh
-# kirk-detect -- works out which hardware this is (kirkus for Apple Silicon).
+# kirk-detect -- works out which hardware this is (kirki for Apple Silicon).
 #
 #   eval "$(kirk-detect)"     sets the variables below in the calling shell
 #   kirk-detect --summary     prints a one-line human description

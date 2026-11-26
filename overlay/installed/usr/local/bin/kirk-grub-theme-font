@@ -1,5 +1,5 @@
 #!/bin/sh
-# Builds the menu font for the kirkus GRUB theme: DM Sans (the kirkus typeface)
+# Builds the menu font for the kirki GRUB theme: DM Sans (the kirki typeface)
 # if it's installed, otherwise Noto Sans. If any step fails, the theme keeps GRUB's built-in
 # Unifont, so this can never stop the machine from booting. Run grub-mkconfig afterwards.
 T=/boot/grub/themes/kirkus

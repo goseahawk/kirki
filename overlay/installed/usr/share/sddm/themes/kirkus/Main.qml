@@ -1,6 +1,6 @@
-// kirkus login screen for SDDM (Qt 6).
+// kirki login screen for SDDM (Qt 6).
 //
-// The kirkus bird, faded so it doesn't compete with the password field, drawn with exactly the same
+// The kirki bird, faded so it doesn't compete with the password field, drawn with exactly the same
 // arithmetic as the GRUB background and the Plasma startup splash. When you log in, the splash
 // starts from this same faded bird and brightens it. Under it, the password field, which carries your
 // name. Clock at the top, session, user and power

@@ -1,4 +1,4 @@
-# kirkus look for the first-start setup. Palette: Ink #16171b, Bone #f3efe6, Marigold #f2a93b.
+# kirki look for the first-start setup. Palette: Ink #16171b, Bone #f3efe6, Marigold #f2a93b.
 ---
 componentName:  kirkus
 welcomeStyleCalamares:   false
@@ -10,11 +10,11 @@ sidebar: widget
 navigation: widget
 
 strings:
-    productName:         kirkus
-    shortProductName:    kirkus
-    versionedName:       kirkus
-    shortVersionedName:  kirkus
-    bootloaderEntryName: kirkus
+    productName:         kirki
+    shortProductName:    kirki
+    versionedName:       kirki
+    shortVersionedName:  kirki
+    bootloaderEntryName: kirki
     productUrl:          https://github.com/goseahawk/kirki
     supportUrl:          https://github.com/goseahawk/kirki/issues
 
