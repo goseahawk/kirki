@@ -75,7 +75,8 @@ What `build.sh` does:
 
 1. Downloads the Arch Linux ARM root filesystem (`ArchLinuxARM-aarch64-latest.tar.gz`, checked
    against its `.md5`; reused for a week) and unpacks it.
-2. Runs `image/setup.sh` inside it with `arch-chroot`. That adds the Asahi ALARM repository and its
+2. Runs `image/setup.sh` inside it with `arch-chroot`. It has to get to its last line, which leaves
+   a marker (`/kirk-src/setup-complete`) that `build.sh` checks; otherwise the build stops. That adds the Asahi ALARM repository and its
    signing key, swaps the generic kernel for `linux-asahi` + `asahi-meta` + `asahi-desktop-meta`,
    installs the kirki desktop, builds the GRUB image, writes fstab, installs `overlay/installed`,
    rebuilds the initramfs and enables the services. Packages in its `OPTIONAL` list (Timeshift,

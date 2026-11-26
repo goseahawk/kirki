@@ -243,4 +243,5 @@ pacman -Scc --noconfirm >/dev/null 2>&1 || true
 rm -rf /var/cache/pacman/pkg/* /tmp/* /root/.cache
 # each install gets its own machine ID on its first start
 : > /etc/machine-id
+touch /kirk-src/setup-complete       # build.sh checks for it
 echo "kirki $VERSION is set up in the image."

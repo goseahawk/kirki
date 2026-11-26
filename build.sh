@@ -61,16 +61,17 @@ if ((${#missing[@]})); then
   exit 1
 fi
 
-# Never leave anything mounted, whatever happens.
-cleanup() {
+# Never leave anything mounted, whatever happens. The body is a subshell, so its "set +e" stays in
+# here: in a normal function it would turn error checking off for the rest of the build.
+cleanup() (
   set +e
   for m in "$IMG" "$ROOT"; do
-    while grep -q " $m[/ ]" /proc/mounts 2>/dev/null; do
+    while grep -q " ${m}[/ ]" /proc/mounts 2>/dev/null; do
       awk -v m="$m" '$2 == m || index($2, m "/") == 1 {print $2}' /proc/mounts | sort -r | xargs -r umount -l
       sleep 0.2
     done
   done
-}
+)
 trap 'cleanup; [[ -n ${loopdev-} ]] && losetup -d "$loopdev" 2>/dev/null; true' EXIT
 
 # ---------------------------------------------------------------------------------------- base
@@ -96,6 +97,8 @@ cp -r "$HERE/overlay" "$HERE/image" "$ROOT/kirk-src/"
 echo "== Setting up kirki in the image (this is the long part) =="
 arch-chroot "$ROOT" env VERSION="$VERSION" ROOT_UUID="$ROOT_UUID" EFI_UUID="$EFI_UUID" \
   /bin/bash /kirk-src/image/setup.sh
+# setup.sh leaves this as its very last step: anything less is a failed setup, whatever the exit status
+[[ -e $ROOT/kirk-src/setup-complete ]] || { echo "Setting up the image didn't finish (see the errors above)."; exit 1; }
 rm -rf "$ROOT/kirk-src"
 cleanup
 
